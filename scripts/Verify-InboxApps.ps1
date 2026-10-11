@@ -1,3 +1,16 @@
+> [!IMPORTANT]
+> The Microsoft Store and other Inbox Apps documented here are
+> custom-provisioned components of this project.
+>
+> They do not represent the default application set of an official
+> Windows 10 IoT Enterprise LTSC 2021 installation.
+>
+> 本文件中的 Microsoft Store 與其他 Inbox Apps，
+> 為本專案額外 Provision 至 Reference Image 的自訂元件。
+>
+> 這些 App 不代表 Microsoft 官方 Windows 10 IoT Enterprise
+> LTSC 2021 的預設應用程式組態。
+
 #Requires -Version 5.1
 #Requires -RunAsAdministrator
 
