@@ -1,95 +1,157 @@
 # Build Guide / 建置指南
 
-This document describes the reference-image workflow used by this project.
+This document describes the actual reference-image build workflow used by this project.
 
-本文件記錄本專案實際使用的 Windows 10 LTSC 參考映像製作流程，包括 Audit Mode、系統更新、Microsoft Inbox Apps Provisioning、Sysprep、WinPE Capture，以及最終映像驗證。
+本文件記錄本專案實際使用的 Windows 10 LTSC 參考映像製作流程，包括：
+
+- Windows 10 LTSC 2021 21H2 preparation
+- Audit Mode
+- 21H2 servicing
+- Offline 22H2 Enablement Package installation through WinPE
+- Build verification
+- Base WIM capture
+- Microsoft Inbox Apps provisioning
+- Sysprep
+- Final WIM capture
+- Installation-media validation
+- Edition and activation verification
 
 ---
 
-# 中文
+# 1. Project Scope / 專案範圍
 
-## 1. 建置目標
+The project starts from Windows 10 Enterprise LTSC 2021 installation media.
 
-本專案的建置目標為建立一個：
-
-```text
-Architecture : x64
-Language     : zh-TW
-Base         : Windows 10 Enterprise LTSC 2021
-Base Edition : EnterpriseS
-Custom Build : 19045.7725
-Target       : Windows 10 IoT Enterprise LTSC 2021
-```
-
-的乾淨參考映像。
-
-本專案最終使用的自訂系統版本為：
+本專案以 Windows 10 Enterprise LTSC 2021 安裝媒體作為建置基底。
 
 ```text
-Windows 10
-Version 22H2
-OS Build 19045.7725
+Base product        : Windows 10 Enterprise LTSC 2021
+Base version        : Windows 10 version 21H2
+Base build family   : 19044
+Base Edition ID     : EnterpriseS
+
+Architecture        : x64
+Language            : zh-TW
+
+Custom version      : Windows 10 version 22H2
+Custom build        : 19045.7725
+
+Licensed target     : Windows 10 IoT Enterprise LTSC
+Target Edition ID   : IoTEnterpriseS
 ```
 
 > [!IMPORTANT]
-> Windows 10 Enterprise LTSC 2021 / Windows 10 IoT Enterprise LTSC 2021 官方版本基於 Windows 10 21H2。
+> Windows 10 IoT Enterprise LTSC 2021 was officially released as
+> Windows 10 version 21H2 / Build 19044.
 >
-> 本專案的 `19045.7725 / 22H2` 是自訂更新後的映像狀態，並不是 Microsoft 官方發布的「LTSC 22H2」。
+> 本專案所使用的 `22H2 / Build 19045.7725` 為自訂 servicing 後的系統狀態。
+>
+> 本專案不宣稱 Microsoft 曾正式發布
+> `Windows 10 IoT Enterprise LTSC 2021 22H2`。
 
 ---
 
-## 2. Edition 模型
+# 2. Official LTSC vs. Custom 22H2 State / 官方 LTSC 與自訂 22H2
 
-本專案使用 Windows 10 Enterprise LTSC 2021 Volume License 安裝媒體作為基底。
+Microsoft's official Windows 10 IoT Enterprise LTSC 2021 release is:
 
-原始映像 Edition：
+```text
+Version : 21H2
+Build   : 19044
+```
+
+The custom image documented by this project is:
+
+```text
+Version : 22H2
+Build   : 19045.7725
+```
+
+Therefore:
+
+```text
+Official LTSC 2021
+21H2 / 19044
+        │
+        │ Project-specific servicing
+        ▼
+Custom LTSC-2021-based image
+22H2 / 19045.7725
+```
+
+The second state is a project-specific customized configuration.
+
+It must not be described as an official Microsoft LTSC 22H2 release.
+
+---
+
+# 3. Edition Model / Edition 模型
+
+The installation-media base used by this project is:
 
 ```text
 EnterpriseS
 ```
 
-安裝後可使用：
+This corresponds to:
+
+```text
+Windows 10 Enterprise LTSC
+```
+
+The licensed IoT target Edition is:
+
+```text
+IoTEnterpriseS
+```
+
+The intended licensing relationship is:
+
+```text
+Windows 10 Enterprise LTSC
+EnterpriseS
+        │
+        │ Valid Windows IoT Enterprise LTSC licensing
+        ▼
+Windows 10 IoT Enterprise LTSC
+IoTEnterpriseS
+```
+
+Edition and activation are separate concepts.
+
+For example:
+
+```text
+EnterpriseS + Activated
+```
+
+is still Windows 10 Enterprise LTSC.
+
+Likewise:
+
+```text
+IoTEnterpriseS + Not Activated
+```
+
+is still the IoT Enterprise LTSC Edition.
+
+Check the current Edition with:
 
 ```cmd
 dism /online /Get-CurrentEdition
 ```
 
-確認。
+Check activation separately with:
 
-基底狀態：
-
-```text
-Current Edition : EnterpriseS
+```cmd
+slmgr /xpr
 ```
-
-在使用者擁有合法 Windows 10 IoT Enterprise LTSC 授權並完成相應 Edition Conversion 後，目標 Edition 為：
-
-```text
-IoTEnterpriseS
-```
-
-因此本專案採用：
-
-```text
-EnterpriseS
-     │
-     │ Valid IoT Enterprise LTSC licensing
-     ▼
-IoTEnterpriseS
-```
-
-的部署模型。
-
-> [!NOTE]
-> Edition Conversion 與 Windows Activation 應分開理解。
->
-> `EnterpriseS` / `IoTEnterpriseS` 表示 Windows Edition。
->
-> Activation 狀態則另外使用 `slmgr` 驗證。
 
 ---
 
-## 3. 建置流程總覽
+# 4. Build Workflow / 建置流程總覽
+
+The actual workflow used by this project is:
 
 ```text
 Windows 10 Enterprise LTSC 2021
@@ -103,183 +165,20 @@ Enter Audit Mode
 Ctrl + Shift + F3
         │
         ▼
-Update and service reference system
+Install all applicable 21H2 updates
         │
         ▼
-Custom Build 19045.7725
-        │
-        ├───────────────┐
-        │               │
-        ▼               │
-Optional Base WIM       │
-Capture                 │
-        │               │
-        └───────────────┘
-                │
-                ▼
-Provision Microsoft Inbox Apps
-                │
-                ▼
-Verify provisioned packages
-                │
-                ▼
-Sysprep /generalize /oobe /shutdown
-                │
-                ▼
-Boot directly into WinPE
-                │
-                ▼
-Capture Windows partition
-                │
-                ▼
-Final install.wim
-                │
-                ▼
-Build installation ISO
-                │
-                ▼
-Clean VM installation test
-                │
-                ▼
-Verify Edition / Build / Apps
-```
-
----
-
-# 4. 建立乾淨參考系統
-
-使用乾淨的 Windows 10 Enterprise LTSC 2021 x64 zh-TW 安裝媒體建立 VM。
-
-建議在正式建立 Reference Image 時：
-
-- 不建立一般使用者帳號
-- 不安裝不必要的第三方軟體
-- 不登入個人 Microsoft Account
-- 不加入個人檔案
-- 不加入產品金鑰到公開腳本或 Repository
-
-在 Windows OOBE 畫面按：
-
-```text
-Ctrl + Shift + F3
-```
-
-進入 Audit Mode。
-
----
-
-# 5. Audit Mode
-
-Audit Mode 會使用 Windows 內建：
-
-```text
-Administrator
-```
-
-帳號登入，而不需要先建立普通使用者帳號。
-
-每次進入 Audit Mode 時可能會自動出現：
-
-```text
-System Preparation Tool
-Sysprep
-```
-
-在映像尚未準備完成之前，關閉該視窗即可。
-
-需要重新啟動時可使用：
-
-```cmd
-shutdown /r /t 0
-```
-
-在整個 Reference Image 建置期間，應持續保持 Audit Mode 工作流程。
-
----
-
-# 6. 系統更新
-
-將參考系統更新至本專案所使用的：
-
-```text
-Version : 22H2
-Build   : 19045.7725
-```
-
-完成後使用：
-
-```cmd
-winver
-```
-
-確認 Build。
-
-也可以使用：
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-確認目前 Edition。
-
-在基底階段預期：
-
-```text
-Current Edition : EnterpriseS
-```
-
-> [!WARNING]
-> 本專案的 22H2 狀態屬於自訂建置流程。
->
-> 不應將其描述為 Microsoft 官方發布的 Windows 10 LTSC 22H2。
-
----
-## 6.1 Upgrade from 21H2 to 22H2 / 21H2 升級至 22H2
-
-The original Windows 10 LTSC 2021 reference system used by this project
-starts from Windows 10 version 21H2.
-
-本專案使用的原始 Windows 10 LTSC 2021 參考系統起始版本為：
-
-```text
-Version : 21H2
-Build   : 19044
-```
-
-The 21H2 system is first fully serviced with the latest applicable Windows
-updates before performing the 22H2 enablement process.
-
-首先在正常 Windows 環境中，將 Windows 10 21H2 更新至當時可取得的最新更新狀態。
-
-建置流程：
-
-```text
-Windows 10 LTSC 2021
-21H2 / Build 19044
-        │
-        ▼
-Install the latest applicable Windows updates
-將 21H2 更新至最新狀態
-        │
-        ▼
-Restart as required
-確認所有更新完成
+Restart until servicing is complete
         │
         ▼
 Shut down Windows
-關閉系統
         │
         ▼
 Boot into Windows PE
-進入 WinPE
         │
         ▼
-Apply the Windows 10 22H2 Enablement Package
+Apply Windows 10 22H2 Enablement Package
 to the offline Windows installation
-對離線 Windows 安裝 22H2 Enablement Package
-        │
-        ▼
-Complete offline servicing
         │
         ▼
 Shut down WinPE
@@ -288,109 +187,335 @@ Shut down WinPE
 Boot Windows normally
         │
         ▼
-Verify with winver
+Verify Version 22H2
         │
         ▼
-Version 22H2
+Verify Build 19045.x
+        │
+        ▼
+Service to project target Build 19045.7725
+        │
+        ▼
+Optional clean 22H2 Base WIM capture
+        │
+        ▼
+Deploy Base image / continue customization
+        │
+        ▼
+Provision Microsoft Inbox Apps
+        │
+        ▼
+Verify Appx provisioning state
+        │
+        ▼
+Sysprep
+/generalize /oobe /shutdown
+        │
+        ▼
+Boot directly into Windows PE
+        │
+        ▼
+Capture final WIM
+        │
+        ▼
+Build installation media
+        │
+        ▼
+Clean VM installation test
+        │
+        ▼
+Verify Edition / Build / Apps
 ```
-
-### Step 1 — Fully update Windows 10 21H2
-
-Before applying the 22H2 Enablement Package, boot the reference system
-normally and install all applicable Windows updates.
-
-在進行 22H2 升級之前，先正常啟動 Windows 10 21H2，並完成 Windows Update。
-
-完成後確認系統沒有待處理的重要更新或尚未完成的重新啟動。
-
-Then shut down the system.
-
-完成後關機。
 
 ---
 
-### Step 2 — Boot into Windows PE
+# 5. Create the Reference System / 建立參考系統
 
-Boot the reference machine directly into Windows PE.
+Install Windows 10 Enterprise LTSC 2021 x64 zh-TW in a clean virtual machine.
 
-將參考系統開機進入：
+建議 Reference Image 建置環境不要加入：
 
 ```text
-Windows PE
+Personal Microsoft account
+Personal files
+Browser profiles
+Saved passwords
+Personal certificates
+Temporary user accounts
+Third-party activation tools
+Private product keys
+Private KMS configuration
 ```
 
-Do not boot into the installed Windows system during this step.
-
-此階段不進入原本的 Windows 系統。
+The goal is to keep the reference installation as clean and reproducible as possible.
 
 ---
 
-### Step 3 — Apply the 22H2 Enablement Package offline
+# 6. Enter Audit Mode / 進入 Audit Mode
 
-In Windows PE, identify the drive letter of the offline Windows installation.
-
-在 WinPE 中先確認 Windows 分割區的磁碟代號。
-
-For example:
+At the Windows OOBE screen press:
 
 ```text
-C:\Windows
+Ctrl + Shift + F3
 ```
 
-Then apply the Windows 10 22H2 Enablement Package to the offline image.
+Windows restarts and enters Audit Mode using the built-in:
 
-再將 Windows 10 22H2 Enablement Package 套用至該離線 Windows 系統。
+```text
+Administrator
+```
+
+account.
+
+Audit Mode allows the operating system to be serviced without creating a normal end-user account.
+
+The Sysprep dialog may automatically appear after each Audit Mode startup.
+
+Before the reference image is ready, simply close the Sysprep dialog.
+
+Normal Audit Mode restarts can be performed with:
+
+```cmd
+shutdown /r /t 0
+```
+
+Do not create a normal user account during reference-image preparation.
+
+---
+
+# 7. Fully Service Windows 10 21H2 / 將 21H2 更新完成
+
+Before enabling Windows 10 22H2, first update the original 21H2 installation.
+
+在正常 Windows / Audit Mode 中執行 Windows Update，安裝建置當時所有適用於該系統的重要：
+
+```text
+Servicing Stack Updates
+Cumulative Updates
+.NET updates
+Required servicing prerequisites
+```
+
+Restart when required.
+
+Repeat servicing until the system has completed all required pending updates.
+
+The purpose of this step is to make sure the 21H2 installation already contains the servicing level required by the 22H2 Enablement Package.
 
 > [!NOTE]
-> Drive letters in Windows PE may differ from those used in the normal
-> Windows environment. Always verify the Windows partition before servicing.
+> "Latest" in this document means the latest applicable servicing level
+> available when this project image was prepared.
+>
+> It does not mean that Build 19045.7725 is permanently the latest Windows build.
 
-完成套件安裝後，確認 DISM servicing 成功，再關閉 WinPE。
+After servicing is complete:
 
----
-
-### Step 4 — Boot Windows normally
-
-After offline servicing is complete:
-
-```text
-Shut down WinPE
-        ↓
-Boot the installed Windows system
+```cmd
+shutdown /s /t 0
 ```
 
-第一次啟動時，Windows 會完成必要的版本切換與設定。
+---
+
+# 8. Boot into Windows PE / 啟動 WinPE
+
+Do not immediately boot the installed Windows system again.
+
+Boot the machine into Windows PE or the Windows Setup recovery environment.
+
+Typical WinPE command prompt:
+
+```text
+X:\Sources>
+```
+
+Drive letters in WinPE may differ from normal Windows.
+
+Therefore, identify the installed Windows partition first.
+
+Examples:
+
+```cmd
+dir C:\Windows
+dir D:\Windows
+dir E:\Windows
+```
+
+Use the partition that contains the actual offline Windows installation.
+
+For the following examples:
+
+```text
+<WindowsDrive>
+```
+
+means the drive containing the offline Windows installation.
 
 ---
 
-### Step 5 — Verify 22H2
+# 9. Offline 22H2 Enablement / 離線啟用 22H2
 
-After Windows starts successfully, run:
+Windows 10 versions 21H2 and 22H2 share a common core.
+
+The Windows 10 22H2 Enablement Package activates the dormant 22H2 feature set and changes the version/build family from:
+
+```text
+21H2 / 19044
+```
+
+to:
+
+```text
+22H2 / 19045
+```
+
+This project applies the 22H2 Enablement Package while Windows is offline in WinPE.
+
+> [!WARNING]
+> This is a project-specific servicing procedure.
+>
+> Microsoft officially identifies Windows 10 IoT Enterprise LTSC 2021
+> as version 21H2 / Build 19044.
+>
+> Although Windows 10 21H2 and 22H2 share the same core and the
+> Windows 10 22H2 Enablement Package is documented by Microsoft,
+> this project does not claim that applying it to an LTSC 2021
+> installation creates an officially released or officially supported
+> "LTSC 2021 22H2" product.
+
+---
+
+## 9.1 Verify the Offline Windows Image
+
+Before applying any package:
+
+```cmd
+dism /Image:<WindowsDrive>:\ /Get-CurrentEdition
+```
+
+Expected project base:
+
+```text
+Current Edition : EnterpriseS
+```
+
+You can also verify the offline Windows directory:
+
+```cmd
+dir <WindowsDrive>:\Windows
+```
+
+---
+
+## 9.2 Apply the 22H2 Enablement Package
+
+The package used for Windows 10 22H2 enablement is commonly identified as:
+
+```text
+KB5015684
+```
+
+Apply the appropriate x64 package to the offline Windows image.
+
+General syntax:
+
+```cmd
+dism /Image:<WindowsDrive>:\ /Add-Package /PackagePath:"<Path-to-22H2-Enablement-Package>"
+```
+
+Example format:
+
+```cmd
+dism /Image:C:\ /Add-Package /PackagePath:"D:\Packages\<22H2-package>.cab"
+```
+
+Do not copy the example drive letters blindly.
+
+Always verify:
+
+```text
+Windows partition
+Package location
+Package architecture
+```
+
+before running DISM.
+
+DISM should complete successfully before continuing.
+
+---
+
+## 9.3 Shut Down WinPE
+
+After the package has been successfully applied:
+
+```cmd
+wpeutil shutdown
+```
+
+or use the equivalent WinPE shutdown method.
+
+---
+
+# 10. First Boot after 22H2 Enablement / 升級後第一次啟動
+
+Boot the installed Windows system normally.
+
+Windows may perform configuration work during the first boot.
+
+After reaching the desktop, verify:
 
 ```cmd
 winver
 ```
 
-The upgrade is considered successful when Windows reports:
+Successful conversion should show:
 
 ```text
 Version 22H2
 ```
 
-For this project, the final serviced reference system reports:
+The build family should now be:
+
+```text
+19045.x
+```
+
+This confirms that:
+
+```text
+21H2 / 19044
+        ↓
+22H2 Enablement
+        ↓
+22H2 / 19045
+```
+
+was successful.
+
+---
+
+# 11. Service to Project Build 19045.7725 / 更新至專案組建
+
+After confirming 22H2, continue servicing until the project target build is reached:
 
 ```text
 Version 22H2
 OS Build 19045.7725
 ```
 
-The OS build can also be verified with:
+Verify with:
+
+```cmd
+winver
+```
+
+and:
 
 ```cmd
 ver
 ```
 
-or through:
+Windows Settings may also be used:
 
 ```text
 Settings
@@ -399,180 +524,166 @@ Settings
 → Windows specifications
 ```
 
+Expected project result:
+
+```text
+Version               : 22H2
+OS Build               : 19045.7725
+```
+
 ---
 
-### Upgrade verification
+# 12. Optional 22H2 Base WIM / 建立乾淨 22H2 Base WIM
 
-Successful conversion:
+Before adding Microsoft Inbox Apps or other customizations, this project can capture a clean 22H2 Base WIM.
 
-```text
-Before:
-Version 21H2
-Build 19044.x
-
-After:
-Version 22H2
-Build 19045.x
-```
-
-The final project image was later serviced to:
+This avoids repeating:
 
 ```text
-Build 19045.7725
+21H2 installation
+→ servicing
+→ WinPE 22H2 enablement
+→ additional servicing
 ```
 
-> [!IMPORTANT]
-> This is a custom servicing procedure applied to the LTSC 2021 base.
->
-> It does not mean Microsoft released an official
-> "Windows 10 IoT Enterprise LTSC 2021 22H2" product.
-# 7. 建立乾淨 22H2 Base WIM
+if later customization fails.
 
-在加入額外 Inbox Apps 之前，可先建立乾淨的 Base WIM。
-
-這樣日後若 Provisioning 或其他自訂步驟出現問題，不需要重新從原始 21H2 開始。
-
-完成系統更新後執行：
+Before capture, run:
 
 ```powershell
 & "C:\Windows\System32\Sysprep\Sysprep.exe" /generalize /oobe /shutdown
 ```
 
-系統關機後：
+After Sysprep shuts down the machine:
 
-**不要再次進入 Windows。**
+**Do not boot the reference Windows installation again.**
 
-直接開機進入 Windows PE / Windows Setup Environment。
+Boot directly into WinPE.
 
 ---
 
-## 7.1 WinPE Capture
+# 13. Capture the Base WIM / 擷取 Base WIM
 
-假設：
+Assume:
 
 ```text
-C:\ = Windows partition
+C:\ = Sysprepped Windows partition
 D:\ = image storage
 ```
 
-先建立 Scratch directory：
+Verify these letters in WinPE before proceeding.
+
+Create a DISM scratch directory:
 
 ```cmd
 md D:\DismScratch
 ```
 
-範例 Capture：
+Example:
 
 ```cmd
 dism /Capture-Image ^
- /ImageFile:D:\Win10_LTSC_22H2_Base_19045.7725.wim ^
+ /ImageFile:D:\Win10_LTSC_2021_Custom_22H2_Base_19045.7725.wim ^
  /CaptureDir:C:\ ^
- /Name:"Windows 10 Enterprise LTSC 2021 Custom Base" ^
- /Description:"Windows 10 Enterprise LTSC 2021 custom 22H2 base, build 19045.7725" ^
+ /Name:"Windows 10 LTSC 2021 Custom 22H2 Base" ^
+ /Description:"Windows 10 LTSC 2021 custom 22H2 base, build 19045.7725" ^
  /Compress:max ^
  /Verify ^
  /ScratchDir:D:\DismScratch
 ```
 
-完成後驗證：
+> [!NOTE]
+> `/Name` and `/Description` are WIM display metadata.
+>
+> They do not determine the actual Windows Edition.
+
+Verify:
 
 ```cmd
-dism /Get-ImageInfo /ImageFile:D:\Win10_LTSC_22H2_Base_19045.7725.wim /Index:1
+dism /Get-ImageInfo ^
+ /ImageFile:D:\Win10_LTSC_2021_Custom_22H2_Base_19045.7725.wim ^
+ /Index:1
 ```
 
-應確認：
+Expected base metadata:
 
 ```text
-Architecture : x64
-Version      : 10.0.19045
-Build        : 7725
-Edition      : EnterpriseS
-Installation : Client
-Language     : zh-TW
+Architecture        : x64
+Version             : 10.0.19045
+ServicePack Build   : 7725
+Edition             : EnterpriseS
+Installation        : Client
+Product Type        : WinNT
+System Root         : WINDOWS
+Language            : zh-TW
 ```
 
 ---
 
-# 8. Microsoft Inbox Apps
+# 14. Restore or Deploy the Base Image / 使用 Base WIM
 
-本專案使用 Microsoft Inbox Apps 套件進行 App Provisioning。
+The clean Base WIM can be used for subsequent builds.
 
-在乾淨的 Reference Image 中進入 Audit Mode 後，再 Provision 必要套件。
-
-使用：
-
-```powershell
-Get-AppxProvisionedPackage -Online
-```
-
-可以檢查目前已 Provision 的 App。
-
----
-
-## 8.1 Provisioned Applications
-
-本專案測試使用的主要 App 包括：
-
-| Application | Version |
-|---|---:|
-| Microsoft Store | 11910.1002.513.0 |
-| Store Purchase App | 11811.1001.1813.0 |
-| Desktop App Installer | 2019.125.2243.0 |
-| Calculator | 2020.1906.55.0 |
-| ScreenSketch | 2019.904.1644.0 |
-| Camera | 2018.826.98.0 |
-| Photos | 2019.19071.12548.0 |
-| ZuneMusic | 2019.19071.19011.0 |
-| AV1 Video Extension | 1.1.30781.0 |
-| VP9 Video Extension | 1.0.22681.0 |
-| HEIF Image Extension | 1.0.22742.0 |
-| WebP Image Extension | 1.0.22753.0 |
-| Web Media Extension | 1.0.20875.0 |
-| MPEG-2 Video Extension | 1.0.22661.0 |
-
-Required dependencies include:
+After deploying the Base image:
 
 ```text
-Microsoft.NET.Native.Framework 1.7
-Microsoft.NET.Native.Framework 2.2
-Microsoft.NET.Native.Runtime 1.7
-Microsoft.NET.Native.Runtime 2.2
-
-Microsoft.UI.Xaml 2.0
-Microsoft.UI.Xaml 2.1
-Microsoft.UI.Xaml 2.3
-
-Microsoft.VCLibs 14.00
-Microsoft.VCLibs 14.00 Desktop
+Boot Windows
+        ↓
+Enter / remain in Audit Mode
+        ↓
+Continue customization
 ```
 
-Both x64 and required x86 dependencies are provisioned where applicable.
+This allows the Inbox Apps stage to be repeated without rebuilding 21H2 → 22H2 from the beginning.
 
 ---
 
-## 8.2 HEVC
+# 15. Microsoft Inbox Apps Provisioning / Provision Microsoft Inbox Apps
 
-HEVC was not included in the Microsoft Inbox Apps source used by this project.
+The project provisions selected Microsoft Inbox Apps into the reference image.
 
-Therefore HEVC is not pre-provisioned into the reference image.
+The package source used by the tested build contains:
 
-Users should obtain HEVC separately through an appropriately licensed Microsoft distribution channel if required.
+```text
+amd64fre
+x86fre
+```
+
+Required Frameworks / Dependencies are provisioned first.
+
+Main applications are provisioned afterward.
+
+General order:
+
+```text
+Framework dependencies
+        ↓
+Main Inbox Apps
+        ↓
+Provisioning verification
+        ↓
+Sysprep
+```
+
+Detailed package information is documented separately in:
+
+```text
+docs/INBOX-APPS.md
+```
 
 ---
 
-# 9. Inbox Apps 驗證
+# 16. Verify Provisioned Apps / 驗證 Provisioning
 
-完成 Provisioning 後，可以使用：
+Check provisioned packages:
 
 ```powershell
 Get-AppxProvisionedPackage -Online |
-    Select-Object DisplayName, Version |
+    Select-Object DisplayName, Version, Architecture |
     Sort-Object DisplayName
 ```
 
-檢查 App。
-
-也可以使用：
+The project also checks for Store-signed apps installed for users but not provisioned into the image:
 
 ```powershell
 $provNames = @(
@@ -597,518 +708,192 @@ Write-Host ""
 Write-Host "Remaining count = $($Remaining.Count)"
 ```
 
-本專案建置時的理想驗證結果：
+The successfully tested build reached:
 
 ```text
-Remaining count = 0
+Frameworks / Dependencies : 18 successful
+Main Inbox Apps            : 14 successful
+Remaining Store Apps       : 0
 ```
+
+A non-zero result should be investigated before Sysprep.
 
 ---
 
-# 10. Final Sysprep
+# 17. Final Sysprep / 最終 Sysprep
 
-所有更新與 App Provisioning 完成後，確認沒有一般使用者帳號或不必要的使用者資料。
-
-執行：
+After all servicing and Inbox Apps provisioning are complete:
 
 ```powershell
 & "C:\Windows\System32\Sysprep\Sysprep.exe" /generalize /oobe /shutdown
 ```
 
-參數：
+Parameters:
 
 ```text
 /generalize
 ```
 
-移除裝置特定資訊並準備 Reference Image。
+prepares the installation as a generalized reference image.
 
 ```text
 /oobe
 ```
 
-下一次啟動進入 Windows OOBE。
+configures the next Windows boot to enter OOBE.
 
 ```text
 /shutdown
 ```
 
-完成後自動關機。
+shuts down the machine after Sysprep completes.
 
 ---
 
-## 10.1 非常重要
+## 17.1 Critical Rule after Sysprep
 
-Sysprep 完成並關機後：
+After Sysprep automatically shuts down:
 
 ```text
-DO NOT boot the reference Windows installation again.
+DO NOT BOOT WINDOWS AGAIN
 ```
 
-必須直接進入 WinPE。
+Boot directly into WinPE.
 
-否則 Windows 再次啟動後可能改變已 Generalize 的 Reference Image 狀態。
+Booting the generalized Windows installation before capture can modify the reference state.
 
 ---
 
-# 11. Final WIM Capture
+# 18. Final WIM Capture / 最終 WIM 擷取
 
-進入 Windows PE。
+In WinPE, identify the Windows and output drives again.
 
-假設：
+Example:
 
 ```text
 C:\ = Sysprepped Windows
-D:\ = output drive
+D:\ = capture destination
 ```
 
-建立 Scratch directory：
+Create the Scratch directory if required:
 
 ```cmd
 md D:\DismScratch
 ```
 
-擷取：
+Recommended example:
 
 ```cmd
 dism /Capture-Image ^
- /ImageFile:D:\Win10_Custom_19045.7725.wim ^
+ /ImageFile:D:\Win10_LTSC_2021_Custom_22H2_19045.7725.wim ^
  /CaptureDir:C:\ ^
- /Name:"Windows 10 IoT Enterprise LTSC" ^
+ /Name:"Windows 10 LTSC 2021 Custom 22H2" ^
  /Description:"Windows 10 LTSC 2021 custom reference image, build 19045.7725" ^
  /Compress:max ^
  /Verify ^
  /ScratchDir:D:\DismScratch
 ```
 
-> [!NOTE]
-> WIM 的 `/Name` 與 `/Description` 是映像顯示資訊。
->
-> 它們不會自行改變真正的 Windows Edition。
->
-> 真正的 Edition 應以 DISM `Edition` / `Current Edition` 為準。
+If the WinPE DISM version does not support a particular optional capture switch, remove only the unsupported switch and retry.
+
+Do not change the capture source unless the Windows partition has been verified.
 
 ---
 
-# 12. WIM 驗證
+# 19. Verify Final WIM Metadata / 驗證最終 WIM
 
-執行：
+Run:
 
 ```cmd
-dism /Get-ImageInfo /ImageFile:D:\Win10_Custom_19045.7725.wim /Index:1
-```
-
-本專案的 Enterprise LTSC deployment-base WIM 應具有完整 metadata，例如：
-
-```text
-Architecture : x64
-Version      : 10.0.19045
-Build        : 7725
-Edition      : EnterpriseS
-Installation : Client
-Product Type : WinNT
-System Root  : WINDOWS
-Language     : zh-TW
-```
-
-若出現大量：
-
-```text
-<undefined>
-```
-
-或缺少 Edition / Installation / Language 等資訊，不建議直接用於正式 ISO。
-
----
-
-# 13. 不建議直接強制修改 Offline WIM Edition
-
-本專案曾測試將 Offline WIM：
-
-```text
-EnterpriseS
-```
-
-直接使用 DISM 改為：
-
-```text
-IoTEnterpriseS
-```
-
-WIM metadata 可以成功變更。
-
-但將該映像直接放回原始 Enterprise LTSC Setup media 後，實際測試出現：
-
-```text
-The product key entered does not match any of the Windows images
-available for installation.
-```
-
-因此，本專案目前不採用：
-
-```text
-Force offline EnterpriseS
-        ↓
-IoTEnterpriseS
-```
-
-作為標準 ISO 建置方式。
-
-建議保留與原始 Setup media 相容的：
-
-```text
-EnterpriseS
-```
-
-安裝映像，再依照合法 IoT Enterprise LTSC 授權流程完成目標 Edition 轉換。
-
----
-
-# 14. 建立 ISO
-
-將完成的 `install.wim` 放回相容的 Windows Setup media：
-
-```text
-sources\install.wim
-```
-
-再建立新的 bootable ISO。
-
-本 Repository 不提供 Microsoft Windows ISO 或 WIM 二進位檔。
-
----
-
-# 15. Clean Installation Test
-
-正式發布文件前，建議建立全新 VM 測試：
-
-```text
-Boot ISO
-    ↓
-Windows Setup
-    ↓
-Clean installation
-    ↓
-OOBE
-    ↓
-Desktop
-```
-
-確認 Setup 沒有：
-
-```text
-No images are available for installation
-```
-
-或：
-
-```text
-The product key entered does not match any of the Windows images
-available for installation.
-```
-
-等錯誤。
-
----
-
-# 16. 安裝完成後驗證
-
-## Edition
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-Enterprise LTSC 基底：
-
-```text
-Current Edition : EnterpriseS
-```
-
-完成合法 IoT Enterprise LTSC Edition Conversion 後：
-
-```text
-Current Edition : IoTEnterpriseS
-```
-
----
-
-## Build
-
-```cmd
-winver
-```
-
-本專案目標：
-
-```text
-Version 22H2
-OS Build 19045.7725
-```
-
----
-
-## Activation
-
-```cmd
-slmgr /xpr
-```
-
-或：
-
-```cmd
-slmgr /dli
-```
-
-Activation 與 Edition 應分開驗證。
-
----
-
-# 17. 不應加入 Reference Image 的內容
-
-正式 Golden / Reference Image 不建議包含：
-
-```text
-Personal Microsoft account
-Personal files
-Passwords
-Browser profiles
-Private certificates
-Private activation infrastructure
-MAK keys
-OEM keys
-Private KMS configuration
-Temporary test accounts
-```
-
----
-
-# 18. 發布前檢查
-
-在建立 GitHub Release documentation 前，至少確認：
-
-```text
-[ ] Correct Windows architecture
-[ ] Correct zh-TW language
-[ ] Build 19045.7725
-[ ] Complete WIM metadata
-[ ] Windows Setup installs successfully
-[ ] No temporary user account
-[ ] Required Inbox Apps are provisioned
-[ ] Sysprep completed successfully
-[ ] Clean VM installation completed
-[ ] Edition verified with DISM
-[ ] No product keys stored in scripts
-[ ] No Microsoft ISO/WIM distributed in repository
-```
-
----
-
-# English
-
-## 1. Purpose
-
-This document describes the reference-image build workflow used by this project.
-
-The project starts from:
-
-```text
-Windows 10 Enterprise LTSC 2021
-Architecture : x64
-Language     : zh-TW
-Edition ID   : EnterpriseS
-```
-
-and creates a customized reference image at:
-
-```text
-Windows 10 Version 22H2
-OS Build 19045.7725
-```
-
-The licensed target edition is Windows 10 IoT Enterprise LTSC 2021:
-
-```text
-IoTEnterpriseS
-```
-
-> [!IMPORTANT]
-> Windows 10 Enterprise LTSC 2021 and Windows 10 IoT Enterprise LTSC 2021 are officially based on Windows 10 21H2.
->
-> The 22H2 / Build 19045.7725 state documented here is a custom project build and is not an official Microsoft LTSC 22H2 release.
-
----
-
-## 2. Reference-image workflow
-
-```text
-Windows 10 Enterprise LTSC 2021
-        │
-        ▼
-Clean installation
-        │
-        ▼
-Audit Mode
-        │
-        ▼
-System servicing
-        │
-        ▼
-Build 19045.7725
-        │
-        ▼
-Microsoft Inbox Apps provisioning
-        │
-        ▼
-Package verification
-        │
-        ▼
-Sysprep
-/generalize /oobe /shutdown
-        │
-        ▼
-Windows PE
-        │
-        ▼
-DISM image capture
-        │
-        ▼
-Custom WIM
-        │
-        ▼
-Installation media
-        │
-        ▼
-Clean VM validation
-```
-
----
-
-## 3. Audit Mode
-
-At the Windows OOBE screen:
-
-```text
-Ctrl + Shift + F3
-```
-
-Audit Mode allows the reference system to be serviced without creating a normal end-user account.
-
-The built-in Administrator account is used during reference-image preparation.
-
----
-
-## 4. Version verification
-
-Use:
-
-```cmd
-winver
-```
-
-Expected custom build:
-
-```text
-Version 22H2
-OS Build 19045.7725
-```
-
-Check Edition with:
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-The deployment base is expected to report:
-
-```text
-Current Edition : EnterpriseS
-```
-
----
-
-## 5. Microsoft Inbox Apps
-
-Microsoft Inbox Apps and their required dependencies are provisioned into the reference image before Sysprep.
-
-Provisioned packages can be inspected with:
-
-```powershell
-Get-AppxProvisionedPackage -Online
-```
-
-HEVC is not included in the package source used by this project and is therefore not pre-provisioned.
-
----
-
-## 6. Sysprep
-
-After servicing and provisioning are complete:
-
-```powershell
-& "C:\Windows\System32\Sysprep\Sysprep.exe" /generalize /oobe /shutdown
-```
-
-After shutdown:
-
-**Do not boot the reference Windows installation again.**
-
-Boot directly into Windows PE.
-
----
-
-## 7. Capture
-
-Example:
-
-```cmd
-dism /Capture-Image ^
- /ImageFile:D:\Win10_Custom_19045.7725.wim ^
- /CaptureDir:C:\ ^
- /Name:"Windows 10 IoT Enterprise LTSC" ^
- /Description:"Windows 10 LTSC 2021 custom reference image, build 19045.7725" ^
- /Compress:max ^
- /Verify ^
- /ScratchDir:D:\DismScratch
-```
-
-Verify the captured image:
-
-```cmd
-dism /Get-ImageInfo /ImageFile:D:\Win10_Custom_19045.7725.wim /Index:1
+dism /Get-ImageInfo ^
+ /ImageFile:D:\Win10_LTSC_2021_Custom_22H2_19045.7725.wim ^
+ /Index:1
 ```
 
 The image should contain complete metadata.
 
+Expected deployment-base characteristics:
+
+```text
+Architecture        : x64
+Version             : 10.0.19045
+ServicePack Build   : 7725
+Edition             : EnterpriseS
+Installation        : Client
+Product Type        : WinNT
+Product Suite       : Terminal Server
+System Root         : WINDOWS
+Language            : zh-TW
+```
+
+A WIM containing multiple important fields such as:
+
+```text
+Edition      : <undefined>
+Installation : <undefined>
+Language     : <undefined>
+```
+
+should not be treated as a validated release image.
+
 ---
 
-## 8. Edition handling
+# 20. WIM Name Is Not the Windows Edition / WIM 名稱不等於 Edition
 
-The installation base uses:
+For example, a WIM may contain:
+
+```text
+Name    : Windows 10 IoT Enterprise LTSC
+Edition : EnterpriseS
+```
+
+These two values describe different things.
+
+```text
+Name
+```
+
+is a WIM display label.
+
+```text
+Edition
+```
+
+is the actual Windows Edition ID.
+
+Therefore:
+
+```text
+/Name:"Windows 10 IoT Enterprise LTSC"
+```
+
+does not convert:
 
 ```text
 EnterpriseS
 ```
 
-The licensed IoT Enterprise LTSC target is:
+into:
 
 ```text
 IoTEnterpriseS
 ```
 
-These should not be confused with activation state.
+Always verify the actual Edition with DISM.
 
-The actual Edition should be checked with:
+For future captures, this project recommends neutral WIM names such as:
 
-```cmd
-dism /online /Get-CurrentEdition
+```text
+Windows 10 LTSC 2021 Custom 22H2
 ```
+
+to avoid confusion.
 
 ---
 
-## 9. Offline Edition modification
+# 21. Do Not Force Offline IoT Edition Conversion / 不使用離線強制 IoT 轉換
 
-Testing confirmed that DISM can alter the offline WIM Edition from:
+This project tested an offline conversion from:
 
 ```text
 EnterpriseS
@@ -1120,50 +905,293 @@ to:
 IoTEnterpriseS
 ```
 
-However, using the resulting image directly with the original Enterprise LTSC Setup media caused a product-key/image mismatch during Windows Setup.
+DISM successfully changed the WIM Edition metadata.
 
-For this reason, forced offline Edition conversion is not used as the standard deployment workflow in this project.
+However, when that modified WIM was inserted into the original Enterprise LTSC Setup media, Windows Setup reported:
+
+```text
+The product key entered does not match any of the Windows images
+available for installation.
+```
+
+Therefore the standard project workflow does **not** use:
+
+```text
+Offline WIM
+EnterpriseS
+        ↓
+Force Set-Edition
+        ↓
+IoTEnterpriseS
+        ↓
+Direct installation
+```
+
+Instead, the project keeps the installation image compatible with the original Enterprise LTSC Setup-media logic.
 
 ---
 
-## 10. Final validation
+# 22. Build Installation Media / 建立安裝 ISO
 
-A fresh VM installation should verify:
+Replace the appropriate:
 
 ```text
-Windows Setup succeeds
-Correct architecture
-Correct language
-Build 19045.7725
-Required Inbox Apps
-Complete WIM metadata
-No temporary reference-image user
-Correct Windows Edition
+sources\install.wim
 ```
 
-Edition:
+in a compatible Windows Setup source with the validated custom WIM.
 
-```cmd
-dism /online /Get-CurrentEdition
+Then rebuild the bootable ISO using an ISO-authoring tool that preserves:
+
+```text
+BIOS boot support
+UEFI boot support
+Windows Setup file structure
 ```
 
-Build:
+This repository does not redistribute the resulting Microsoft ISO or WIM.
+
+---
+
+# 23. Clean Installation Validation / 全新安裝測試
+
+A new VM should always be used to test the final installation media.
+
+Validation sequence:
+
+```text
+Boot custom ISO
+        ↓
+Windows Setup starts
+        ↓
+Image is detected
+        ↓
+Clean installation succeeds
+        ↓
+OOBE succeeds
+        ↓
+Desktop loads
+        ↓
+Verify Version
+        ↓
+Verify Edition
+        ↓
+Verify Inbox Apps
+```
+
+The ISO should not display errors such as:
+
+```text
+Windows cannot display the images available for installation.
+```
+
+or:
+
+```text
+The product key entered does not match any of the Windows images
+available for installation.
+```
+
+---
+
+# 24. Verify Installed Build / 驗證安裝後 Build
+
+Run:
 
 ```cmd
 winver
 ```
 
-Activation:
+Expected custom-project result:
+
+```text
+Version 22H2
+OS Build 19045.7725
+```
+
+The Settings page should report the same build.
+
+---
+
+# 25. Verify Installed Edition / 驗證 Edition
+
+Run:
+
+```cmd
+dism /online /Get-CurrentEdition
+```
+
+Before an IoT licensing conversion, the deployment base may report:
+
+```text
+Current Edition : EnterpriseS
+```
+
+This means:
+
+```text
+Windows 10 Enterprise LTSC
+```
+
+After a valid and applicable Windows IoT Enterprise LTSC licensing conversion:
+
+```text
+Current Edition : IoTEnterpriseS
+```
+
+This means:
+
+```text
+Windows 10 IoT Enterprise LTSC
+```
+
+---
+
+# 26. Verify Activation / 驗證啟用狀態
+
+Activation is checked separately:
 
 ```cmd
 slmgr /xpr
 ```
 
+or:
+
+```cmd
+slmgr /dli
+```
+
+The repository does not contain:
+
+```text
+MAK keys
+OEM keys
+Private KMS keys
+Activation cracks
+Activation bypass tools
+```
+
+Users must provide their own legally obtained and applicable Windows licensing.
+
 ---
 
-# Legal / Distribution Note
+# 27. Support-Lifecycle Warning / 支援生命週期警告
 
-This repository documents a build workflow.
+The official Windows 10 IoT Enterprise LTSC 2021 lifecycle applies to Microsoft's official LTSC 2021 product configuration:
+
+```text
+Version : 21H2
+Build   : 19044
+```
+
+This project changes the operating-system version/build state to:
+
+```text
+Version : 22H2
+Build   : 19045.7725
+```
+
+Therefore, this repository does **not** claim that Microsoft's official LTSC 2021 support lifecycle applies unchanged to this customized 19045 image.
+
+The 22H2 conversion documented here should be treated as:
+
+```text
+Project-specific customization
+```
+
+not:
+
+```text
+Official Microsoft LTSC 22H2 release
+```
+
+---
+
+# 28. Release Validation Checklist / 發布前檢查
+
+Before documenting a project build as validated, verify:
+
+```text
+[ ] Original installation source is known
+[ ] Architecture is x64
+[ ] Language is zh-TW
+[ ] Audit Mode was used
+[ ] No normal reference-image user account remains
+[ ] 21H2 servicing completed before 22H2 enablement
+[ ] WinPE offline 22H2 package installation completed successfully
+[ ] Windows boots successfully after enablement
+[ ] winver reports 22H2
+[ ] Final build is 19045.7725
+[ ] Required Inbox Apps are provisioned
+[ ] Remaining Store App count is 0
+[ ] Sysprep completed successfully
+[ ] Windows was not booted again after final Sysprep
+[ ] Final WIM contains complete metadata
+[ ] Final WIM Edition is intentionally verified
+[ ] Installation ISO boots successfully
+[ ] Clean VM installation succeeds
+[ ] DISM Edition is verified after installation
+[ ] Activation is verified separately from Edition
+[ ] No product keys are stored in the repository
+[ ] No Microsoft ISO/WIM is redistributed
+```
+
+---
+
+# 29. Project Build Summary / 專案建置摘要
+
+The final build process can be summarized as:
+
+```text
+Windows 10 Enterprise LTSC 2021
+21H2 / 19044 / EnterpriseS
+        ↓
+Audit Mode
+        ↓
+Update 21H2 to required servicing level
+        ↓
+Shutdown
+        ↓
+WinPE
+        ↓
+Offline Windows 10 22H2 Enablement Package
+        ↓
+Shutdown
+        ↓
+Normal Windows boot
+        ↓
+Verify 22H2 / 19045
+        ↓
+Service to 19045.7725
+        ↓
+Optional Base WIM
+        ↓
+Provision Microsoft Inbox Apps
+        ↓
+Verify packages
+        ↓
+Sysprep /generalize /oobe /shutdown
+        ↓
+WinPE
+        ↓
+Capture final WIM
+        ↓
+Build installation ISO
+        ↓
+Clean VM test
+        ↓
+EnterpriseS installation base
+        ↓
+Valid IoT licensing conversion when applicable
+        ↓
+IoTEnterpriseS
+```
+
+---
+
+# 30. Distribution Notice / 散佈聲明
+
+This repository documents a Windows image-building workflow.
 
 It does not distribute:
 
@@ -1171,18 +1199,18 @@ It does not distribute:
 Microsoft Windows ISO files
 install.wim
 install.esd
-Microsoft proprietary App packages
-Product keys
+Microsoft proprietary Inbox App packages
+Microsoft product keys
 Activation bypass tools
 ```
 
-Users must obtain Microsoft Windows installation media, Microsoft packages and Windows IoT Enterprise licensing through properly authorized channels.
+Users must obtain Windows installation media, Microsoft application packages, and Windows IoT Enterprise licensing through appropriately authorized channels.
 
 ---
 
-# Related Documentation
+# Related Documentation / 相關文件
 
 - [Project README](../README.md)
 - [Edition and Licensing](EDITION.md)
-- [Inbox Apps](INBOX-APPS.md)
+- [Microsoft Inbox Apps](INBOX-APPS.md)
 - [Troubleshooting](TROUBLESHOOTING.md)
