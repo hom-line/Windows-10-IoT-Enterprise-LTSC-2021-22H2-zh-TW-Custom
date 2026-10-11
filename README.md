@@ -11,35 +11,31 @@
 | Archive | `7-Zip multi-volume archive` |
 | Extract Password / 解壓密碼 | **`7725`** |
 
-### 📥 [Download v0.1.0 / 下載 v0.1.0](/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
+### 📦 Release
 
-The installation image is distributed as a password-protected multi-volume 7-Zip archive.
+[➡️ View v0.1.0 Release / 查看 v0.1.0 發布頁面](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
 
-安裝映像採用有密碼保護的 7-Zip 分卷格式提供。
+### 📥 Direct Download / 直接下載
 
-Download **all five parts**:
+Please download **all five parts**.
 
-```text
-zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
-zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.002
-zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.003
-zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.004
-zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.005
-```
+請下載以下 **5 個分卷**：
 
-Place all five files in the **same folder**.
+1. [⬇️ Part 1 — `.7z.001`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001)
 
-請將五個分卷全部下載並放在**同一個資料夾**。
+2. [⬇️ Part 2 — `.7z.002`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.002)
 
-Then open or extract only:
+3. [⬇️ Part 3 — `.7z.003`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.003)
 
-```text
-zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
-```
+4. [⬇️ Part 4 — `.7z.004`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.004)
 
-with **7-Zip**.
+5. [⬇️ Part 5 — `.7z.005`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.005)
 
-後續 `.002`、`.003`、`.004`、`.005` 會由 7-Zip 自動讀取，**不需要逐一解壓**。
+### 🔐 SHA-256
+
+[⬇️ Download SHA256.txt](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/SHA256.txt)
+
+---
 
 ### 🔑 Extract Password / 解壓密碼
 
@@ -47,33 +43,36 @@ with **7-Zip**.
 7725
 ```
 
-### 🔐 File Integrity / 檔案完整性
+### 📂 Extraction / 解壓方式
 
-Download:
+Place all five files in the **same folder**.
+
+請將五個分卷全部放在**同一個資料夾**。
+
+Then use 7-Zip to open or extract only:
 
 ```text
-SHA256.txt
+zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
 ```
 
-and verify the downloaded parts before extraction.
+7-Zip will automatically read:
 
-PowerShell example:
-
-```powershell
-Get-FileHash ".\zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001" -Algorithm SHA256
+```text
+.002
+.003
+.004
+.005
 ```
 
-Compare the calculated hash with the corresponding value in `SHA256.txt`.
+後續分卷會自動讀取，**不需要逐一解壓**。
 
 ### ⚠️ Important
 
 > This project uses a custom LTSC-2021-based Windows 10 22H2 / Build 19045.7725 configuration.
 >
-> It is **not** an official Microsoft Windows 10 IoT Enterprise LTSC 2021 22H2 release.
+> It is **not** an official Microsoft LTSC 22H2 release.
 >
-> 本專案為基於 LTSC 2021 的自訂 Windows 10 22H2 / Build 19045.7725 組態，並非 Microsoft 官方發布的 LTSC 22H2 版本。
-
----
+> 本專案為基於 LTSC 2021 的自訂 Windows 10 22H2 / Build 19045.7725 組態，並非 Microsoft 官方 LTSC 22H2 發行版本。
 
 # Windows 10 IoT Enterprise LTSC 2021 22H2 zh-TW Custom
 
