@@ -1,3 +1,80 @@
+## ⬇️ Download / 下載
+
+### Windows 10 IoT Enterprise LTSC 2021 — Custom 22H2
+
+| Item | Information |
+|---|---|
+| Version | `22H2` |
+| OS Build | `19045.7725` |
+| Architecture | `x64` |
+| Language | `zh-TW` |
+| Archive | `7-Zip multi-volume archive` |
+| Extract Password / 解壓密碼 | **`7725`** |
+
+### 📥 [Download v0.1.0 / 下載 v0.1.0](/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
+
+The installation image is distributed as a password-protected multi-volume 7-Zip archive.
+
+安裝映像採用有密碼保護的 7-Zip 分卷格式提供。
+
+Download **all five parts**:
+
+```text
+zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
+zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.002
+zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.003
+zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.004
+zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.005
+```
+
+Place all five files in the **same folder**.
+
+請將五個分卷全部下載並放在**同一個資料夾**。
+
+Then open or extract only:
+
+```text
+zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
+```
+
+with **7-Zip**.
+
+後續 `.002`、`.003`、`.004`、`.005` 會由 7-Zip 自動讀取，**不需要逐一解壓**。
+
+### 🔑 Extract Password / 解壓密碼
+
+```text
+7725
+```
+
+### 🔐 File Integrity / 檔案完整性
+
+Download:
+
+```text
+SHA256.txt
+```
+
+and verify the downloaded parts before extraction.
+
+PowerShell example:
+
+```powershell
+Get-FileHash ".\zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001" -Algorithm SHA256
+```
+
+Compare the calculated hash with the corresponding value in `SHA256.txt`.
+
+### ⚠️ Important
+
+> This project uses a custom LTSC-2021-based Windows 10 22H2 / Build 19045.7725 configuration.
+>
+> It is **not** an official Microsoft Windows 10 IoT Enterprise LTSC 2021 22H2 release.
+>
+> 本專案為基於 LTSC 2021 的自訂 Windows 10 22H2 / Build 19045.7725 組態，並非 Microsoft 官方發布的 LTSC 22H2 版本。
+
+---
+
 # Windows 10 IoT Enterprise LTSC 2021 22H2 zh-TW Custom
 
 > Custom Windows 10 IoT Enterprise LTSC 2021 deployment and reference-image project  
