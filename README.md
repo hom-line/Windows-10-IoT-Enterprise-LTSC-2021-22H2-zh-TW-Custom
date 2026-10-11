@@ -1,3 +1,10 @@
+# Windows 10 IoT Enterprise LTSC 2021 22H2 zh-TW Custom
+
+> Custom Windows 10 LTSC 2021-based deployment and reference-image project  
+> Windows 10 LTSC 2021 基底之自訂部署、Reference Image 與 PowerShell 工具專案
+
+---
+
 ## ⬇️ Download / 下載
 
 ### Windows 10 IoT Enterprise LTSC 2021 — Custom 22H2
@@ -8,10 +15,13 @@
 | OS Build | `19045.7725` |
 | Architecture | `x64` |
 | Language | `zh-TW` |
+| Base Edition ID | `EnterpriseS` |
+| IoT Target Edition ID | `IoTEnterpriseS` |
 | Archive | `7-Zip multi-volume archive` |
 | Extract Password / 解壓密碼 | **`7725`** |
+| Project Release | `v0.1.0` |
 
-### 📦 Release
+### 📦 Release Page / 發布頁面
 
 [➡️ View v0.1.0 Release / 查看 v0.1.0 發布頁面](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
 
@@ -35,8 +45,6 @@ Please download **all five parts**.
 
 [⬇️ Download SHA256.txt](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/SHA256.txt)
 
----
-
 ### 🔑 Extract Password / 解壓密碼
 
 ```text
@@ -45,11 +53,11 @@ Please download **all five parts**.
 
 ### 📂 Extraction / 解壓方式
 
-Place all five files in the **same folder**.
+Place all five archive parts in the **same directory**.
 
-請將五個分卷全部放在**同一個資料夾**。
+請先將五個分卷全部放在**同一個資料夾**。
 
-Then use 7-Zip to open or extract only:
+Use 7-Zip to open or extract only:
 
 ```text
 zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
@@ -64,53 +72,19 @@ zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
 .005
 ```
 
-後續分卷會自動讀取，**不需要逐一解壓**。
+不需要逐一解壓 `.002` ～ `.005`。
 
-### ⚠️ Important
+---
 
-> This project uses a custom LTSC-2021-based Windows 10 22H2 / Build 19045.7725 configuration.
+## ⚠️ Important Notice / 重要說明
+
+> This project documents and provides a **custom LTSC-2021-based Windows 10 22H2 / Build 19045.7725 configuration**.
 >
-> It is **not** an official Microsoft LTSC 22H2 release.
+> Windows 10 IoT Enterprise LTSC 2021 was officially released by Microsoft as **Windows 10 version 21H2 / Build 19044**.
 >
-> 本專案為基於 LTSC 2021 的自訂 Windows 10 22H2 / Build 19045.7725 組態，並非 Microsoft 官方 LTSC 22H2 發行版本。
-
-
-## 📀 Base Installation Media / 原始安裝媒體
-
-This project was built from an official Microsoft
-**Windows 10 Enterprise LTSC 2021 x64** installation image obtained
-through an authorized Microsoft distribution/licensing channel.
-
-本專案的原始建置基底為 Microsoft 官方提供的：
-
-- **Windows 10 Enterprise LTSC 2021**
-- Architecture: `x64`
-- Original version: `21H2`
-- Original build family: `19044`
-- Original Edition ID: `EnterpriseS`
-
-The original Microsoft image was then serviced and customized to produce
-the project reference configuration:
-
-```text
-Windows 10 LTSC 2021 base
-21H2 / Build 19044 / EnterpriseS
-        ↓
-Project-specific servicing
-        ↓
-22H2 / Build 19045.7725
-        ↓
-Microsoft Inbox Apps provisioning
-        ↓
-Sysprep + WIM capture
-        ↓
-Custom deployment image
-
-
-# Windows 10 IoT Enterprise LTSC 2021 22H2 zh-TW Custom
-
-> Custom Windows 10 IoT Enterprise LTSC 2021 deployment and reference-image project  
-> Windows 10 IoT Enterprise LTSC 2021 自訂部署與參考映像專案
+> The `22H2 / Build 19045.7725` configuration in this project is a custom servicing result and **is not an official Microsoft LTSC 22H2 release**.
+>
+> 本專案的 `22H2 / Build 19045.7725` 為 LTSC 2021 基底經自訂 servicing 後的結果，並非 Microsoft 官方發布的「Windows 10 IoT Enterprise LTSC 2021 22H2」。
 
 ---
 
@@ -118,161 +92,146 @@ Custom deployment image
 
 ## 專案簡介
 
-本專案記錄 Windows 10 IoT Enterprise LTSC 2021 的自訂部署、更新、應用程式 Provisioning、Sysprep 與 WIM 擷取流程。
+本專案記錄 Windows 10 LTSC 2021 Reference Image 的完整自訂建置流程，包括：
 
-此專案使用 Windows 10 Enterprise LTSC 2021 x64 Volume License 安裝媒體作為部署基底，原始 Edition ID 為：
+- Windows 10 Enterprise LTSC 2021 原始基底
+- Audit Mode
+- Windows 10 21H2 系統更新
+- WinPE Offline Servicing
+- Windows 10 22H2 Enablement
+- Build 19045.7725
+- Microsoft Inbox Apps Provisioning
+- Appx / Framework 驗證
+- Sysprep
+- WIM Capture
+- ISO 建置
+- Edition 驗證
+- Windows Activation 驗證
+- PowerShell 自動化與檢查工具
+
+---
+
+## 📀 Base Installation Media / 原始安裝媒體
+
+本專案的 Reference Image 以 Microsoft 官方：
+
+```text
+Windows 10 Enterprise LTSC 2021
+```
+
+安裝媒體作為原始建置基底。
+
+原始組態：
+
+```text
+Product       : Windows 10 Enterprise LTSC 2021
+Version       : 21H2
+Build Family  : 19044
+Architecture  : x64
+Language      : zh-TW
+Edition ID    : EnterpriseS
+```
+
+原始媒體透過 Microsoft 官方或適用的授權 / 發布管道取得。
+
+建置鏈：
+
+```text
+Official Windows 10 Enterprise LTSC 2021 media
+21H2 / Build 19044 / EnterpriseS
+        │
+        ▼
+Audit Mode
+        │
+        ▼
+Install applicable 21H2 updates
+        │
+        ▼
+Shutdown
+        │
+        ▼
+Boot Windows PE
+        │
+        ▼
+Offline 22H2 Enablement
+        │
+        ▼
+Boot Windows
+        │
+        ▼
+Version 22H2 / Build 19045
+        │
+        ▼
+Service to Build 19045.7725
+        │
+        ▼
+Provision Microsoft Inbox Apps
+        │
+        ▼
+Verify Appx state
+        │
+        ▼
+Sysprep
+        │
+        ▼
+WinPE Capture
+        │
+        ▼
+Custom WIM / ISO
+```
+
+> [!NOTE]
+> 本自訂映像並非由 Microsoft 發布、背書或認證。
+
+---
+
+## Edition 模型
+
+本專案需要清楚區分：
 
 ```text
 EnterpriseS
 ```
 
-依照 Windows 10 IoT Enterprise LTSC 2021 Volume License 的授權部署方式，在套用合法的 Windows 10 IoT Enterprise LTSC 2021 授權金鑰後，系統可轉換為：
+與：
 
 ```text
 IoTEnterpriseS
 ```
 
-因此，本專案中的 Edition 邏輯為：
+### Base Edition
+
+Windows 10 Enterprise LTSC 2021：
 
 ```text
-Windows 10 Enterprise LTSC 2021
-Edition ID: EnterpriseS
-        │
-        │ Apply a valid Windows 10 IoT Enterprise LTSC license
-        ▼
-Windows 10 IoT Enterprise LTSC 2021
-Edition ID: IoTEnterpriseS
+Edition ID : EnterpriseS
 ```
 
-請注意：
-
-**Edition Conversion（版本轉換）與 Activation（啟用）並不是完全相同的概念。**
-
-Edition 應以以下指令確認：
+可使用：
 
 ```cmd
 dism /online /Get-CurrentEdition
-```
-
-若顯示：
-
-```text
-Current Edition : EnterpriseS
-```
-
-代表目前系統仍為 Windows 10 Enterprise LTSC。
-
-若顯示：
-
-```text
-Current Edition : IoTEnterpriseS
-```
-
-代表系統已轉換為 Windows 10 IoT Enterprise LTSC。
-
-啟用狀態則可另外使用：
-
-```cmd
-slmgr /xpr
 ```
 
 確認。
 
----
-
-## 專案版本資訊
-
-| 項目 | 內容 |
-|---|---|
-| Base OS | Windows 10 Enterprise LTSC 2021 |
-| Base Edition ID | `EnterpriseS` |
-| Target OS | Windows 10 IoT Enterprise LTSC 2021 |
-| Target Edition ID | `IoTEnterpriseS` |
-| Architecture | x64 |
-| Language | zh-TW |
-| Original LTSC Release | Windows 10 21H2 |
-| Original LTSC Build | 19044 |
-| Custom Build | 19045.7725 |
-| Custom Branch | Windows 10 22H2 |
-| Deployment Mode | Audit Mode + Sysprep |
-| Image Format | WIM |
-| Application Source | Microsoft Inbox Apps packages |
-
----
-
-## 重要：這不是 Microsoft 官方 LTSC 22H2
-
-Windows 10 IoT Enterprise LTSC 2021 官方版本基於：
-
-```text
-Windows 10 Version 21H2
-Build 19044
-```
-
-本專案中的：
-
-```text
-Windows 10 Version 22H2
-Build 19045.7725
-```
-
-是由 LTSC 2021 基底經過自訂更新與映像製作流程所建立的版本。
-
-因此：
-
-```text
-Windows 10 IoT Enterprise LTSC 2021 22H2
-```
-
-是本專案用來描述自訂映像狀態的名稱，
-
-**並不代表 Microsoft 曾正式發布「Windows 10 IoT Enterprise LTSC 2021 22H2」。**
-
-本專案不是 Microsoft 官方發行版本。
-
----
-
-# Edition 與授權邏輯
-
-## 原始安裝狀態
-
-Windows 10 Enterprise LTSC 2021 Volume License 安裝媒體中的安裝映像可能顯示：
-
-```text
-Edition : EnterpriseS
-```
-
-安裝完成後：
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-可能顯示：
+典型結果：
 
 ```text
 Current Edition : EnterpriseS
 ```
 
-此時 Windows 介面會顯示：
-
-```text
-Windows 10 Enterprise LTSC
-```
-
 ---
 
-## IoT Enterprise LTSC 轉換
+### IoT Enterprise LTSC Target Edition
 
-使用者必須自行擁有適用且合法的 Windows 10 IoT Enterprise LTSC 授權。
-
-套用相應授權後，Edition 可轉換為：
+完成適用且合法的 Windows 10 IoT Enterprise LTSC Edition Conversion 後：
 
 ```text
-IoTEnterpriseS
+Edition ID : IoTEnterpriseS
 ```
 
-再次執行：
+確認方式：
 
 ```cmd
 dism /online /Get-CurrentEdition
@@ -284,659 +243,156 @@ dism /online /Get-CurrentEdition
 Current Edition : IoTEnterpriseS
 ```
 
-此時 Windows 可辨識為：
-
-```text
-Windows 10 IoT Enterprise LTSC
-```
-
----
-
-## 不要以 Winver 作為唯一 Edition 判斷方式
-
-建議使用：
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-作為 Edition ID 的主要確認方式。
-
-其次再使用：
-
-```cmd
-winver
-```
-
-確認版本及 Build。
-
-最後使用：
-
-```cmd
-slmgr /xpr
-```
-
-確認授權啟用狀態。
-
----
-
-# 建置流程
-
-本專案的參考映像製作流程如下：
-
-```text
-Windows 10 Enterprise LTSC 2021
-        │
-        ▼
-Install Windows
-        │
-        ▼
-Enter Audit Mode
-Ctrl + Shift + F3
-        │
-        ▼
-Update / customize system
-        │
-        ▼
-Build 19045.7725
-        │
-        ▼
-Provision Microsoft Inbox Apps
-        │
-        ▼
-Verify packages
-        │
-        ▼
-Sysprep
-/generalize /oobe /shutdown
-        │
-        ▼
-Boot into WinPE
-        │
-        ▼
-Capture Windows partition
-        │
-        ▼
-install.wim
-        │
-        ▼
-Build custom installation media
-```
-
----
-
-# Audit Mode
-
-在 Windows OOBE 畫面按下：
-
-```text
-Ctrl + Shift + F3
-```
-
-即可進入 Audit Mode。
-
-Audit Mode 的優點是：
-
-- 不需要建立一般使用者帳號
-- 使用 Windows 內建 Administrator
-- 適合安裝更新與 Provision App
-- 適合建立 Golden / Reference Image
-- 可在完成後使用 Sysprep Generalize
-
-在製作 Reference Image 時，不建議建立一般使用者帳號後再進行擷取。
-
----
-
-# Microsoft Inbox Apps
-
-本專案使用 Microsoft InboxApps 套件進行 Provisioning。
-
-目前包含：
-
-| Application | Version |
-|---|---:|
-| Microsoft Store | 11910.1002.513.0 |
-| Store Purchase App | 11811.1001.1813.0 |
-| Desktop App Installer | 2019.125.2243.0 |
-| Calculator | 2020.1906.55.0 |
-| ScreenSketch / Snipping Tool | 2019.904.1644.0 |
-| Camera | 2018.826.98.0 |
-| Photos | 2019.19071.12548.0 |
-| Groove Music / ZuneMusic | 2019.19071.19011.0 |
-| AV1 Video Extension | 1.1.30781.0 |
-| VP9 Video Extension | 1.0.22681.0 |
-| HEIF Image Extension | 1.0.22742.0 |
-| WebP Image Extension | 1.0.22753.0 |
-| Web Media Extension | 1.0.20875.0 |
-| MPEG-2 Video Extension | 1.0.22661.0 |
-
-必要 Framework 亦包括：
-
-```text
-Microsoft.NET.Native.Framework 1.7
-Microsoft.NET.Native.Framework 2.2
-Microsoft.NET.Native.Runtime 1.7
-Microsoft.NET.Native.Runtime 2.2
-
-Microsoft.UI.Xaml 2.0
-Microsoft.UI.Xaml 2.1
-Microsoft.UI.Xaml 2.3
-
-Microsoft.VCLibs 14.00
-Microsoft.VCLibs 14.00 Desktop
-```
-
-x64 與必要的 x86 dependencies 均依照套件需求 Provision。
-
----
-
-## HEVC
-
-目前使用的 Microsoft InboxApps 套件來源中沒有提供 HEVC 套件，因此本專案沒有將 HEVC 預先 Provision 到映像內。
-
-使用者可依照自身授權與 Microsoft Store 提供方式自行取得。
-
----
-
-# Provisioned App 驗證
-
-可使用 PowerShell：
-
-```powershell
-Get-AppxProvisionedPackage -Online |
-    Select-Object DisplayName, Version |
-    Sort-Object DisplayName
-```
-
-確認 Provisioned Packages。
-
-也可比較目前所有使用者 App 與 Provisioned App：
-
-```powershell
-$provNames = @(
-    Get-AppxProvisionedPackage -Online |
-    Select-Object -ExpandProperty DisplayName
-)
-
-$Remaining = @(
-    Get-AppxPackage -AllUsers |
-    Where-Object {
-        $_.SignatureKind -eq "Store" -and
-        -not $_.NonRemovable -and
-        $_.Name -notin $provNames
-    }
-)
-
-$Remaining |
-    Select-Object Name,Version,Architecture,IsFramework,PackageFullName |
-    Format-Table -AutoSize
-
-Write-Host ""
-Write-Host "Remaining count = $($Remaining.Count)"
-```
-
-理想狀態：
-
-```text
-Remaining count = 0
-```
-
----
-
-# Sysprep
-
-完成所有更新、Provisioning 與客製化後，可執行：
-
-```powershell
-& "C:\Windows\System32\Sysprep\Sysprep.exe" /generalize /oobe /shutdown
-```
-
-系統自動關機後：
-
-**不要再次開機進入 Windows。**
-
-應直接從 Windows PE 或 Windows Setup Environment 開機，然後擷取 Windows Partition。
-
----
-
-# WIM Capture
-
-範例：
-
-```cmd
-dism /Capture-Image ^
- /ImageFile:D:\Win10_Custom.wim ^
- /CaptureDir:C:\ ^
- /Name:"Windows 10 IoT Enterprise LTSC" ^
- /Description:"Windows 10 IoT Enterprise LTSC Custom Image" ^
- /Compress:max ^
- /Verify ^
- /ScratchDir:D:\DismScratch
-```
-
-完成後：
-
-```cmd
-dism /Get-ImageInfo /ImageFile:D:\Win10_Custom.wim /Index:1
-```
-
-確認映像資訊。
-
----
-
-# Edition 驗證
-
-安裝後使用：
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-Enterprise LTSC 基底：
-
-```text
-Current Edition : EnterpriseS
-```
-
-完成合法 IoT Enterprise LTSC Edition Conversion 後：
-
-```text
-Current Edition : IoTEnterpriseS
-```
-
----
-
-# Build 驗證
-
-執行：
-
-```cmd
-winver
-```
-
-本專案自訂映像預期 Build：
-
-```text
-19045.7725
-```
-
----
-
-# Activation 驗證
-
-可使用：
-
-```cmd
-slmgr /xpr
-```
-
-或：
-
-```cmd
-slmgr /dli
-```
-
-確認授權狀態。
-
-本專案：
-
-- 不提供產品金鑰
-- 不包含 MAK
-- 不包含私人 KMS 設定
-- 不繞過 Windows Activation
-- 不提供任何 Activation Crack
-
-使用者必須自行取得合法 Windows 授權。
-
----
-
-# 為什麼 install.wim 顯示 EnterpriseS？
-
-這是本專案特別容易產生誤解的地方。
-
-本專案的 Volume License 安裝基底為：
-
-```text
-Windows 10 Enterprise LTSC 2021
-Edition ID: EnterpriseS
-```
-
-而目標授權 Edition 為：
-
-```text
-Windows 10 IoT Enterprise LTSC 2021
-Edition ID: IoTEnterpriseS
-```
-
-因此：
-
-```text
-EnterpriseS
-     │
-     │ Valid IoT Enterprise LTSC license
-     ▼
-IoTEnterpriseS
-```
-
-並不應單純將 `install.wim` 中顯示 `EnterpriseS` 理解為部署流程錯誤。
-
-真正的 Edition 應依照實際授權與 Edition Conversion 結果判斷。
-
----
-
-# 為什麼不直接修改 WIM 為 IoTEnterpriseS？
-
-測試中，將原始 `EnterpriseS` WIM 使用 DISM 離線轉換成：
-
-```text
-IoTEnterpriseS
-```
-
-雖然 DISM 可以成功修改 Edition metadata，但原始 Windows Setup 媒體仍可能使用原本 Enterprise LTSC 的 Edition / Product Key 選擇邏輯。
-
-因此可能導致 Windows Setup 顯示類似：
-
-```text
-The product key entered does not match any of the Windows images
-available for installation.
-```
-
-因此本專案不採用單純離線強制修改 WIM Edition 的方式作為標準部署流程。
-
----
-
-# GitHub 發布方式
-
-本 Repository 主要公開：
-
-```text
-Documentation
-PowerShell scripts
-DISM commands
-Build notes
-Package lists
-Screenshots
-Checksums
-Testing notes
-```
-
-建議結構：
-
-```text
-.
-├── README.md
-├── LICENSE
-├── scripts
-│   ├── Provision-InboxApps.ps1
-│   ├── Verify-InboxApps.ps1
-│   └── Verify-Windows-Edition.ps1
-├── docs
-│   ├── BUILD.md
-│   ├── EDITION.md
-│   ├── INBOX-APPS.md
-│   └── TROUBLESHOOTING.md
-├── screenshots
-└── checksums
-    └── SHA256.txt
-```
-
----
-
-# Microsoft 安裝媒體
-
-本 Repository 不提供或重新散佈：
-
-```text
-Windows ISO
-install.wim
-install.esd
-Microsoft proprietary App packages
-MAK product keys
-OEM product keys
-Volume License product keys
-```
-
-使用者應透過 Microsoft 或合法授權管道自行取得 Windows 安裝媒體、授權與必要套件。
-
----
-
-# Disclaimer / 免責聲明
-
-本專案：
-
-- 非 Microsoft 官方專案
-- 與 Microsoft Corporation 無關
-- 不代表 Microsoft 官方 Windows Release
-- 不提供 Windows 授權
-- 不提供 Windows 產品金鑰
-- 不提供啟用繞過方式
-
-Microsoft、Windows、Windows IoT、Windows Enterprise 及其他 Microsoft 產品名稱為 Microsoft Corporation 的商標。
-
-Repository 中自行撰寫的 scripts 與 documentation 可依本 Repository LICENSE 使用。
-
-Microsoft 所有二進位檔案、Windows 元件與應用程式仍受 Microsoft 自身授權條款約束。
-
----
-
-# English
-
-## Overview
-
-This repository documents a custom deployment and reference-image workflow for Windows 10 IoT Enterprise LTSC 2021.
-
-The deployment starts from Windows 10 Enterprise LTSC 2021 x64 Volume License installation media.
-
-The base Windows Edition ID is:
-
-```text
-EnterpriseS
-```
-
-With an appropriate and legally obtained Windows 10 IoT Enterprise LTSC 2021 license, the installed operating system can be transformed to:
-
-```text
-IoTEnterpriseS
-```
-
-The deployment model is therefore:
-
-```text
-Windows 10 Enterprise LTSC 2021
-Edition ID: EnterpriseS
-        │
-        │ Apply a valid Windows 10 IoT Enterprise LTSC license
-        ▼
-Windows 10 IoT Enterprise LTSC 2021
-Edition ID: IoTEnterpriseS
-```
-
-Edition conversion and Windows activation should be treated as separate concepts.
-
-The current Edition can be verified with:
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-An Enterprise LTSC installation reports:
-
-```text
-Current Edition : EnterpriseS
-```
-
-After a valid IoT Enterprise LTSC edition transformation:
-
-```text
-Current Edition : IoTEnterpriseS
-```
-
-Activation status can be checked separately with:
-
-```cmd
-slmgr /xpr
-```
-
----
-
-## Project information
-
-| Item | Value |
-|---|---|
-| Base OS | Windows 10 Enterprise LTSC 2021 |
-| Base Edition ID | `EnterpriseS` |
-| Target OS | Windows 10 IoT Enterprise LTSC 2021 |
-| Target Edition ID | `IoTEnterpriseS` |
-| Architecture | x64 |
-| Language | zh-TW |
-| Official LTSC Release | Windows 10 21H2 |
-| Official LTSC Base Build | 19044 |
-| Custom Build | 19045.7725 |
-| Custom Branch | Windows 10 22H2 |
-| Deployment | Audit Mode + Sysprep |
-| Image Format | WIM |
-| App Source | Microsoft Inbox Apps packages |
-
----
-
-## Important: This is not an official Microsoft LTSC 22H2 release
-
-The official Windows 10 IoT Enterprise LTSC 2021 release is based on:
-
-```text
-Windows 10 Version 21H2
-Build 19044
-```
-
-This project uses a customized image that has been updated to:
-
-```text
-Windows 10 Version 22H2
-Build 19045.7725
-```
-
-Therefore, the term:
-
-```text
-Windows 10 IoT Enterprise LTSC 2021 22H2
-```
-
-is used only to describe the customized state of this project.
-
-Microsoft did not release an official product named:
-
-```text
-Windows 10 IoT Enterprise LTSC 2021 22H2
-```
-
-This repository is not an official Microsoft Windows release.
-
----
-
-# Edition and licensing model
-
-The installation media used as the deployment base contains:
-
-```text
-Edition ID: EnterpriseS
-```
-
-After installation, the following command may report:
-
-```cmd
-dism /online /Get-CurrentEdition
-```
-
-```text
-Current Edition : EnterpriseS
-```
-
-At this stage Windows identifies itself as:
+因此本專案的 Edition 邏輯為：
 
 ```text
 Windows 10 Enterprise LTSC
-```
-
-A user with a valid Windows 10 IoT Enterprise LTSC license may perform the supported licensing transformation.
-
-After transformation:
-
-```text
-Current Edition : IoTEnterpriseS
-```
-
-Windows then identifies itself as:
-
-```text
+EnterpriseS
+        │
+        │ Valid Windows IoT Enterprise LTSC licensing
+        ▼
 Windows 10 IoT Enterprise LTSC
+IoTEnterpriseS
 ```
 
 ---
 
-# Build workflow
+## Edition ≠ Activation
+
+Windows Edition 與 Windows Activation 是不同概念。
+
+例如：
 
 ```text
-Windows 10 Enterprise LTSC 2021
+EnterpriseS
++ Activated
+```
+
+仍然是 Windows 10 Enterprise LTSC。
+
+而：
+
+```text
+IoTEnterpriseS
++ Not Activated
+```
+
+仍然是 Windows 10 IoT Enterprise LTSC Edition。
+
+Edition：
+
+```cmd
+dism /online /Get-CurrentEdition
+```
+
+Activation：
+
+```cmd
+slmgr /xpr
+```
+
+兩者應分開驗證。
+
+---
+
+## Windows 10 21H2 → 22H2
+
+本專案實際使用的自訂流程：
+
+```text
+Windows 10 LTSC 2021
+21H2 / Build 19044
         │
         ▼
-Install Windows
+Install latest applicable 21H2 servicing updates
         │
         ▼
-Enter Audit Mode
-Ctrl + Shift + F3
-        │
-        ▼
-Install updates and customize
-        │
-        ▼
-Build 19045.7725
-        │
-        ▼
-Provision Microsoft Inbox Apps
-        │
-        ▼
-Verify provisioned packages
-        │
-        ▼
-Sysprep
-/generalize /oobe /shutdown
+Shutdown
         │
         ▼
 Boot Windows PE
         │
         ▼
-Capture Windows partition
+Apply Windows 10 22H2 Enablement Package
+to the offline Windows installation
         │
         ▼
-WIM reference image
+Shutdown WinPE
+        │
+        ▼
+Boot Windows normally
+        │
+        ▼
+Verify with winver
+        │
+        ▼
+22H2 / Build 19045.x
+        │
+        ▼
+Service to 19045.7725
 ```
+
+成功後：
+
+```cmd
+winver
+```
+
+應顯示本專案目標：
+
+```text
+Version 22H2
+OS Build 19045.7725
+```
+
+> [!WARNING]
+> 這是本專案的自訂 servicing 流程。
+>
+> Microsoft 官方 Windows 10 IoT Enterprise LTSC 2021 仍為 21H2 / Build 19044。
+>
+> 將 LTSC 2021 基底轉換到 Build 19045，不代表 Microsoft 官方存在 LTSC 2021 22H2 產品。
 
 ---
 
-# Audit Mode
+## Audit Mode
 
-At the Windows OOBE screen press:
+在 Windows OOBE 畫面：
 
 ```text
 Ctrl + Shift + F3
 ```
 
-Audit Mode allows the reference image to be prepared without creating a normal user account.
+進入 Audit Mode。
 
-It uses the built-in Administrator account and is suitable for:
+Audit Mode 使用 Windows 內建：
+
+```text
+Administrator
+```
+
+帳號，可以在不建立一般終端使用者帳號的情況下準備 Reference Image。
+
+適合：
 
 - Windows servicing
-- Package provisioning
+- App provisioning
 - Driver installation
-- Customization
-- Reference-image preparation
+- 系統客製
+- Reference Image preparation
 - Sysprep
 
 ---
 
-# Microsoft Inbox Apps
+## Microsoft Inbox Apps
 
-The reference image provisions the following Microsoft applications:
+本專案額外 Provision 一組 Microsoft Inbox Apps。
+
+> [!IMPORTANT]
+> Microsoft Store 與本文件列出的其他 Inbox Apps 為本專案額外 Provision 的自訂元件。
+>
+> 它們不代表 Microsoft 官方 Windows 10 IoT Enterprise LTSC 2021 的預設 App 組態。
+
+### Main Apps
 
 | Application | Version |
 |---|---:|
@@ -955,11 +411,24 @@ The reference image provisions the following Microsoft applications:
 | Web Media Extension | 1.0.20875.0 |
 | MPEG-2 Video Extension | 1.0.22661.0 |
 
-Required frameworks include:
+Reference configuration:
+
+```text
+Main Inbox Apps            : 14
+Framework combinations     : 18
+Remaining Store Apps       : 0
+```
+
+---
+
+## Frameworks / Dependencies
+
+Reference Framework set：
 
 ```text
 Microsoft.NET.Native.Framework 1.7
 Microsoft.NET.Native.Framework 2.2
+
 Microsoft.NET.Native.Runtime 1.7
 Microsoft.NET.Native.Runtime 2.2
 
@@ -971,50 +440,338 @@ Microsoft.VCLibs 14.00
 Microsoft.VCLibs 14.00 Desktop
 ```
 
-HEVC is not pre-provisioned because it was not present in the Microsoft Inbox Apps package source used for this project.
+必要的：
+
+```text
+x64
+x86
+```
+
+Architecture combinations 均依需求 Provision。
+
+總計：
+
+```text
+18 Framework / Architecture combinations
+```
 
 ---
 
-# Sysprep
+## HEVC
 
-After servicing and customization are complete:
+本專案使用的 Microsoft Inbox Apps Package Source 中沒有包含 HEVC Package。
+
+因此：
+
+```text
+HEVC is not pre-provisioned.
+```
+
+目前 Reference Image 內的媒體 Extension 包含：
+
+```text
+AV1
+VP9
+HEIF
+WebP
+Web Media
+MPEG-2
+```
+
+HEVC 需依使用者自身授權與適用 Microsoft 發布方式另外取得。
+
+---
+
+## Sysprep
+
+完成 servicing 與 Inbox Apps Provisioning 後：
 
 ```powershell
 & "C:\Windows\System32\Sysprep\Sysprep.exe" /generalize /oobe /shutdown
 ```
 
-After the system shuts down:
+Sysprep 自動關機後：
 
-**Do not boot the reference Windows installation again.**
+```text
+DO NOT BOOT WINDOWS AGAIN
+```
 
-Boot directly into Windows PE and capture the Windows partition.
+應直接：
+
+```text
+Boot Windows PE
+        ↓
+Capture Windows partition
+```
+
+避免重新啟動 Windows 改變已 Generalize 的 Reference Image 狀態。
 
 ---
 
-# Image capture
+## WIM Capture
 
-Example:
+Example：
 
 ```cmd
 dism /Capture-Image ^
- /ImageFile:D:\Win10_Custom.wim ^
+ /ImageFile:D:\Win10_LTSC_2021_Custom_22H2_19045.7725.wim ^
  /CaptureDir:C:\ ^
- /Name:"Windows 10 IoT Enterprise LTSC" ^
- /Description:"Windows 10 IoT Enterprise LTSC Custom Image" ^
+ /Name:"Windows 10 LTSC 2021 Custom 22H2" ^
+ /Description:"Windows 10 LTSC 2021 custom reference image, build 19045.7725" ^
  /Compress:max ^
  /Verify ^
  /ScratchDir:D:\DismScratch
 ```
 
-Verify:
+完成後：
 
 ```cmd
-dism /Get-ImageInfo /ImageFile:D:\Win10_Custom.wim /Index:1
+dism /Get-ImageInfo ^
+ /ImageFile:D:\Win10_LTSC_2021_Custom_22H2_19045.7725.wim ^
+ /Index:1
+```
+
+Reference metadata：
+
+```text
+Architecture        : x64
+Version             : 10.0.19045
+ServicePack Build   : 7725
+Edition             : EnterpriseS
+Installation        : Client
+Product Type        : WinNT
+System Root         : WINDOWS
+Language            : zh-TW
 ```
 
 ---
 
-# Validation
+## WIM Name ≠ Windows Edition
+
+例如：
+
+```text
+Name    : Windows 10 IoT Enterprise LTSC
+Edition : EnterpriseS
+```
+
+並不矛盾，因為：
+
+```text
+WIM Name
+```
+
+只是 Image Display Name。
+
+真正的 Windows Edition 應以：
+
+```text
+Edition
+```
+
+或：
+
+```cmd
+dism /online /Get-CurrentEdition
+```
+
+判斷。
+
+因此本專案後續建議使用中性 WIM Name：
+
+```text
+Windows 10 LTSC 2021 Custom 22H2
+```
+
+避免把 WIM 顯示名稱與 Edition ID 混淆。
+
+---
+
+## Offline IoTEnterpriseS Conversion Test
+
+本專案曾測試將 Offline WIM：
+
+```text
+EnterpriseS
+```
+
+使用 DISM 轉換為：
+
+```text
+IoTEnterpriseS
+```
+
+Offline WIM Edition 可以成功改變。
+
+但將轉換後的 WIM 直接放入原始 Enterprise LTSC Setup Media 後，Windows Setup 曾出現：
+
+```text
+The product key entered does not match any of the Windows images
+available for installation.
+```
+
+因此本專案不採用：
+
+```text
+Offline EnterpriseS
+        ↓
+Force IoTEnterpriseS
+        ↓
+Direct Setup installation
+```
+
+作為標準部署方式。
+
+---
+
+# PowerShell Tools / PowerShell 工具
+
+本 Repository 包含三支主要工具。
+
+## Provision-InboxApps.ps1
+
+```text
+scripts/Provision-InboxApps.ps1
+```
+
+用途：
+
+```text
+18 Framework / Architecture combinations
+        ↓
+14 Main Inbox Apps
+        ↓
+Post-provisioning validation
+```
+
+主要安全設計：
+
+- Full Preflight
+- `-PreflightOnly`
+- Build 19045 validation
+- Source package validation
+- License XML validation
+- Framework-first provisioning
+- Existing packages are skipped
+- No automatic downgrade
+- No automatic App removal
+- Transcript logging
+- Installed-vs-Provisioned verification
+
+Preflight example：
+
+```powershell
+powershell.exe -NoProfile -File .\Provision-InboxApps.ps1 `
+    -SourceRoot "G:\" `
+    -PreflightOnly
+```
+
+Provisioning example：
+
+```powershell
+powershell.exe -NoProfile -File .\Provision-InboxApps.ps1 `
+    -SourceRoot "G:\" `
+    -LogPath "D:\Logs\InboxApps_Provision.log"
+```
+
+---
+
+## Verify-InboxApps.ps1
+
+```text
+scripts/Verify-InboxApps.ps1
+```
+
+Read-only verification：
+
+```text
+14 Main Apps
+18 Framework combinations
+Installed-vs-Provisioned Store Apps
+HEVC status
+```
+
+Expected reference result：
+
+```text
+Main Apps              : 14 / 14
+Framework combinations : 18 / 18
+Remaining Store Apps   : 0
+```
+
+Run：
+
+```powershell
+powershell.exe -NoProfile -File .\Verify-InboxApps.ps1
+```
+
+Exit codes：
+
+```text
+0 = PASS
+1 = FAIL
+```
+
+---
+
+## Verify-Windows-Edition.ps1
+
+```text
+scripts/Verify-Windows-Edition.ps1
+```
+
+驗證：
+
+```text
+Windows Edition ID
+Windows Version
+OS Build
+Architecture
+Activation status
+```
+
+Run：
+
+```powershell
+powershell.exe -NoProfile -File .\Verify-Windows-Edition.ps1
+```
+
+Primary Edition IDs：
+
+```text
+EnterpriseS
+IoTEnterpriseS
+```
+
+---
+
+# Documentation / 文件
+
+完整技術文件位於：
+
+- [Build Guide](docs/BUILD.md)
+- [Edition and Licensing](docs/EDITION.md)
+- [Microsoft Inbox Apps](docs/INBOX-APPS.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+
+---
+
+# Verification / 驗證
+
+## Windows Version
+
+```cmd
+winver
+```
+
+Reference：
+
+```text
+Version 22H2
+OS Build 19045.7725
+```
+
+---
 
 ## Edition
 
@@ -1022,29 +779,19 @@ dism /Get-ImageInfo /ImageFile:D:\Win10_Custom.wim /Index:1
 dism /online /Get-CurrentEdition
 ```
 
-Possible base result:
+Base：
 
 ```text
-Current Edition : EnterpriseS
+EnterpriseS
 ```
 
-After the valid IoT licensing transformation:
+IoT target after applicable licensing conversion：
 
 ```text
-Current Edition : IoTEnterpriseS
+IoTEnterpriseS
 ```
 
-## Windows build
-
-```cmd
-winver
-```
-
-Expected custom build:
-
-```text
-19045.7725
-```
+---
 
 ## Activation
 
@@ -1052,159 +799,328 @@ Expected custom build:
 slmgr /xpr
 ```
 
-or:
+或：
 
 ```cmd
 slmgr /dli
 ```
 
----
-
-# Why can the WIM report EnterpriseS?
-
-The Volume License deployment base is:
-
-```text
-Windows 10 Enterprise LTSC 2021
-EnterpriseS
-```
-
-The licensed target edition is:
-
-```text
-Windows 10 IoT Enterprise LTSC 2021
-IoTEnterpriseS
-```
-
-The intended relationship is:
-
-```text
-EnterpriseS
-     │
-     │ Valid IoT Enterprise LTSC licensing
-     ▼
-IoTEnterpriseS
-```
-
-Therefore, an `EnterpriseS` base image does not by itself indicate that the deployment workflow is incorrect.
+Activation 與 Edition 必須分開驗證。
 
 ---
 
-# Why not force the offline WIM to IoTEnterpriseS?
+## WIM
 
-Testing showed that DISM can change an offline image from:
-
-```text
-EnterpriseS
+```cmd
+dism /Get-ImageInfo /ImageFile:install.wim /Index:1
 ```
 
-to:
+---
+
+## SHA-256
+
+PowerShell：
+
+```powershell
+Get-FileHash ".\filename" -Algorithm SHA256
+```
+
+下載的分卷應與：
+
+```text
+SHA256.txt
+```
+
+內的值完全一致。
+
+---
+
+# English
+
+## Overview
+
+This repository documents a custom Windows 10 LTSC 2021-based deployment and reference-image workflow.
+
+The project starts from official Windows 10 Enterprise LTSC 2021 installation media:
+
+```text
+Version       : 21H2
+Build Family  : 19044
+Edition ID    : EnterpriseS
+Architecture  : x64
+Language      : zh-TW
+```
+
+The reference installation is then serviced and customized to:
+
+```text
+Version       : 22H2
+OS Build      : 19045.7725
+```
+
+The licensed IoT target Edition is:
 
 ```text
 IoTEnterpriseS
 ```
 
-However, the original Windows Setup media may continue to use the original Enterprise LTSC edition and product-key selection logic.
-
-This can result in Setup errors such as:
-
-```text
-The product key entered does not match any of the Windows images
-available for installation.
-```
-
-For this reason, this repository does not use a forced offline WIM Edition modification as its standard deployment method.
+This custom 19045 configuration must not be confused with Microsoft's official Windows 10 IoT Enterprise LTSC 2021 release, which is based on version 21H2 / Build 19044.
 
 ---
 
-# Distribution policy
-
-This repository is intended to distribute:
+## Edition Model
 
 ```text
+Windows 10 Enterprise LTSC
+EnterpriseS
+        │
+        │ Valid Windows IoT Enterprise LTSC licensing
+        ▼
+Windows 10 IoT Enterprise LTSC
+IoTEnterpriseS
+```
+
+Edition and Windows Activation are independent properties.
+
+Verify Edition:
+
+```cmd
+dism /online /Get-CurrentEdition
+```
+
+Verify Activation:
+
+```cmd
+slmgr /xpr
+```
+
+---
+
+## Custom Servicing Workflow
+
+```text
+Official Windows 10 Enterprise LTSC 2021
+21H2 / Build 19044 / EnterpriseS
+        │
+        ▼
+Audit Mode
+        │
+        ▼
+21H2 servicing
+        │
+        ▼
+Shutdown
+        │
+        ▼
+Windows PE
+        │
+        ▼
+Offline 22H2 Enablement
+        │
+        ▼
+Boot Windows
+        │
+        ▼
+22H2 / Build 19045
+        │
+        ▼
+Service to 19045.7725
+        │
+        ▼
+Provision custom Microsoft Inbox Apps
+        │
+        ▼
+Verify packages
+        │
+        ▼
+Sysprep
+        │
+        ▼
+Windows PE
+        │
+        ▼
+Capture WIM
+        │
+        ▼
+Build custom installation media
+```
+
+---
+
+## Custom Inbox Apps
+
+The Microsoft Store and other Inbox Apps documented in this repository are custom-provisioned components.
+
+They do **not** represent the default application set of an official Windows 10 IoT Enterprise LTSC 2021 installation.
+
+Reference configuration:
+
+```text
+Main Inbox Apps            : 14
+Framework combinations     : 18
+Remaining Store Apps       : 0
+```
+
+---
+
+## Release Archive
+
+The installation image is distributed as a password-protected multi-volume 7-Zip archive.
+
+Download all:
+
+```text
+.7z.001
+.7z.002
+.7z.003
+.7z.004
+.7z.005
+```
+
+Place them in the same directory and extract:
+
+```text
+.7z.001
+```
+
+Archive password:
+
+```text
+7725
+```
+
+Verify all downloaded files using:
+
+```text
+SHA256.txt
+```
+
+---
+
+# Support-Lifecycle Notice
+
+Microsoft's official Windows 10 IoT Enterprise LTSC 2021 lifecycle applies to the officially released LTSC 2021 product configuration:
+
+```text
+Version : 21H2
+Build   : 19044
+```
+
+This project uses:
+
+```text
+Version : 22H2
+Build   : 19045.7725
+```
+
+Therefore this repository does **not** claim that Microsoft's official LTSC 2021 lifecycle applies unchanged to this customized Build 19045 image.
+
+---
+
+# Licensing / Distribution Notice
+
+Windows, Windows IoT Enterprise, Microsoft Store and related Microsoft software are Microsoft products and remain subject to Microsoft's applicable license terms.
+
+The original Windows installation media used as the project base was obtained from an official / authorized Microsoft distribution or licensing source.
+
+The MIT License in this repository applies only to original repository content authored for this project, such as:
+
+```text
+PowerShell scripts
 Documentation
-Scripts
-Build instructions
-Package manifests
-Screenshots
-Checksums
-Testing information
+Original project text
+Original project configuration examples
 ```
 
-It does not distribute:
+It does **not** relicense Microsoft software, Windows binaries, Microsoft application packages, Microsoft license files, or Microsoft trademarks.
+
+Users are responsible for ensuring that their use, deployment, licensing, redistribution, and activation of Microsoft software comply with the applicable Microsoft license terms.
+
+This project:
 
 ```text
-Microsoft Windows ISO files
-install.wim
-install.esd
-Microsoft proprietary application packages
-MAK keys
-OEM product keys
-Private volume-license keys
-Activation bypass tools
+is not affiliated with Microsoft Corporation
+is not sponsored by Microsoft Corporation
+is not endorsed by Microsoft Corporation
+is not an official Microsoft Windows release
 ```
 
-Users must obtain Windows installation media, Windows IoT Enterprise licensing, and Microsoft packages from Microsoft or other properly authorized channels.
+No activation bypass or crack is provided by this project.
 
 ---
 
-# Repository structure
+# Security / Integrity
+
+Before using downloaded release files:
+
+1. Download all required archive volumes.
+2. Verify each file against `SHA256.txt`.
+3. Place all archive volumes in one directory.
+4. Extract `.7z.001` with 7-Zip.
+5. Use password `7725`.
+6. Verify the resulting ISO before deployment.
+7. Test the installation media in an isolated VM before production use.
+
+---
+
+# Repository Structure
 
 ```text
 .
 ├── README.md
 ├── LICENSE
-├── scripts
-│   ├── Provision-InboxApps.ps1
-│   ├── Verify-InboxApps.ps1
-│   └── Verify-Windows-Edition.ps1
-├── docs
+│
+├── docs/
 │   ├── BUILD.md
 │   ├── EDITION.md
 │   ├── INBOX-APPS.md
 │   └── TROUBLESHOOTING.md
-├── screenshots
-└── checksums
-    └── SHA256.txt
+│
+└── scripts/
+    ├── Provision-InboxApps.ps1
+    ├── Verify-InboxApps.ps1
+    └── Verify-Windows-Edition.ps1
 ```
 
 ---
 
-# Disclaimer
+# Project Status
 
-This project is:
+```text
+Project Release : v0.1.0
+Reference Build : 19045.7725
+Architecture    : x64
+Language        : zh-TW
 
-- not affiliated with Microsoft Corporation
-- not an official Microsoft Windows release
-- not a Windows licensing service
-- not an activation bypass project
-
-No Windows product keys are provided by this repository.
-
-Microsoft, Windows, Windows IoT, Windows Enterprise and related names are trademarks of Microsoft Corporation.
-
-Any repository license applies only to original scripts, documentation and other material authored for this project.
-
-Microsoft binaries and software remain subject to Microsoft's applicable license terms.
+README          : Complete
+Build Guide     : Complete
+Edition Guide   : Complete
+Inbox Apps      : Complete
+Troubleshooting : Complete
+Provision Tool  : Complete
+Verification    : Complete
+Release Assets  : Available
+SHA-256         : Available
+```
 
 ---
 
-# Suggested repository name
+# Disclaimer / 免責聲明
 
-```text
-Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom
-```
+This project is provided for technical documentation, research, deployment testing, and reference-image workflow purposes.
 
-Suggested release tag:
+Use of Windows and other Microsoft software remains subject to the applicable Microsoft licensing terms.
 
-```text
-v19045.7725
-```
+本專案提供之文件、Scripts 與技術流程主要用於技術研究、Reference Image 建置、部署測試與紀錄。
 
-Suggested internal/private ISO filename:
+Windows、Windows IoT Enterprise、Microsoft Store 及其他 Microsoft 軟體之使用、授權與散布，仍須遵守相應的 Microsoft 授權條款。
 
-```text
-zh-tw_windows_10_iot_enterprise_ltsc_2021_22h2_x64_19045.7725_custom.iso
-```
+Microsoft、Windows、Windows IoT、Windows Enterprise 及相關名稱為 Microsoft Corporation 的商標。
 
-The ISO itself should not be included in public GitHub releases unless you separately have redistribution rights for all included Microsoft content.
+---
+
+## Release
+
+**Current project release:** `v0.1.0`
+
+[➡️ Open v0.1.0 Release](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
