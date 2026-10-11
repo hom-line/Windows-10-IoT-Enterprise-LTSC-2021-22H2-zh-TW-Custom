@@ -74,6 +74,39 @@ zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001
 >
 > 本專案為基於 LTSC 2021 的自訂 Windows 10 22H2 / Build 19045.7725 組態，並非 Microsoft 官方 LTSC 22H2 發行版本。
 
+
+## 📀 Base Installation Media / 原始安裝媒體
+
+This project was built from an official Microsoft
+**Windows 10 Enterprise LTSC 2021 x64** installation image obtained
+through an authorized Microsoft distribution/licensing channel.
+
+本專案的原始建置基底為 Microsoft 官方提供的：
+
+- **Windows 10 Enterprise LTSC 2021**
+- Architecture: `x64`
+- Original version: `21H2`
+- Original build family: `19044`
+- Original Edition ID: `EnterpriseS`
+
+The original Microsoft image was then serviced and customized to produce
+the project reference configuration:
+
+```text
+Windows 10 LTSC 2021 base
+21H2 / Build 19044 / EnterpriseS
+        ↓
+Project-specific servicing
+        ↓
+22H2 / Build 19045.7725
+        ↓
+Microsoft Inbox Apps provisioning
+        ↓
+Sysprep + WIM capture
+        ↓
+Custom deployment image
+
+
 # Windows 10 IoT Enterprise LTSC 2021 22H2 zh-TW Custom
 
 > Custom Windows 10 IoT Enterprise LTSC 2021 deployment and reference-image project  
