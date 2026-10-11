@@ -234,7 +234,198 @@ Current Edition : EnterpriseS
 > 不應將其描述為 Microsoft 官方發布的 Windows 10 LTSC 22H2。
 
 ---
+## 6.1 Upgrade from 21H2 to 22H2 / 21H2 升級至 22H2
 
+The original Windows 10 LTSC 2021 reference system used by this project
+starts from Windows 10 version 21H2.
+
+本專案使用的原始 Windows 10 LTSC 2021 參考系統起始版本為：
+
+```text
+Version : 21H2
+Build   : 19044
+```
+
+The 21H2 system is first fully serviced with the latest applicable Windows
+updates before performing the 22H2 enablement process.
+
+首先在正常 Windows 環境中，將 Windows 10 21H2 更新至當時可取得的最新更新狀態。
+
+建置流程：
+
+```text
+Windows 10 LTSC 2021
+21H2 / Build 19044
+        │
+        ▼
+Install the latest applicable Windows updates
+將 21H2 更新至最新狀態
+        │
+        ▼
+Restart as required
+確認所有更新完成
+        │
+        ▼
+Shut down Windows
+關閉系統
+        │
+        ▼
+Boot into Windows PE
+進入 WinPE
+        │
+        ▼
+Apply the Windows 10 22H2 Enablement Package
+to the offline Windows installation
+對離線 Windows 安裝 22H2 Enablement Package
+        │
+        ▼
+Complete offline servicing
+        │
+        ▼
+Shut down WinPE
+        │
+        ▼
+Boot Windows normally
+        │
+        ▼
+Verify with winver
+        │
+        ▼
+Version 22H2
+```
+
+### Step 1 — Fully update Windows 10 21H2
+
+Before applying the 22H2 Enablement Package, boot the reference system
+normally and install all applicable Windows updates.
+
+在進行 22H2 升級之前，先正常啟動 Windows 10 21H2，並完成 Windows Update。
+
+完成後確認系統沒有待處理的重要更新或尚未完成的重新啟動。
+
+Then shut down the system.
+
+完成後關機。
+
+---
+
+### Step 2 — Boot into Windows PE
+
+Boot the reference machine directly into Windows PE.
+
+將參考系統開機進入：
+
+```text
+Windows PE
+```
+
+Do not boot into the installed Windows system during this step.
+
+此階段不進入原本的 Windows 系統。
+
+---
+
+### Step 3 — Apply the 22H2 Enablement Package offline
+
+In Windows PE, identify the drive letter of the offline Windows installation.
+
+在 WinPE 中先確認 Windows 分割區的磁碟代號。
+
+For example:
+
+```text
+C:\Windows
+```
+
+Then apply the Windows 10 22H2 Enablement Package to the offline image.
+
+再將 Windows 10 22H2 Enablement Package 套用至該離線 Windows 系統。
+
+> [!NOTE]
+> Drive letters in Windows PE may differ from those used in the normal
+> Windows environment. Always verify the Windows partition before servicing.
+
+完成套件安裝後，確認 DISM servicing 成功，再關閉 WinPE。
+
+---
+
+### Step 4 — Boot Windows normally
+
+After offline servicing is complete:
+
+```text
+Shut down WinPE
+        ↓
+Boot the installed Windows system
+```
+
+第一次啟動時，Windows 會完成必要的版本切換與設定。
+
+---
+
+### Step 5 — Verify 22H2
+
+After Windows starts successfully, run:
+
+```cmd
+winver
+```
+
+The upgrade is considered successful when Windows reports:
+
+```text
+Version 22H2
+```
+
+For this project, the final serviced reference system reports:
+
+```text
+Version 22H2
+OS Build 19045.7725
+```
+
+The OS build can also be verified with:
+
+```cmd
+ver
+```
+
+or through:
+
+```text
+Settings
+→ System
+→ About
+→ Windows specifications
+```
+
+---
+
+### Upgrade verification
+
+Successful conversion:
+
+```text
+Before:
+Version 21H2
+Build 19044.x
+
+After:
+Version 22H2
+Build 19045.x
+```
+
+The final project image was later serviced to:
+
+```text
+Build 19045.7725
+```
+
+> [!IMPORTANT]
+> This is a custom servicing procedure applied to the LTSC 2021 base.
+>
+> It does not mean Microsoft released an official
+> "Windows 10 IoT Enterprise LTSC 2021 22H2" product.
 # 7. 建立乾淨 22H2 Base WIM
 
 在加入額外 Inbox Apps 之前，可先建立乾淨的 Base WIM。
