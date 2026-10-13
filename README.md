@@ -96,43 +96,31 @@ Custom setup  : unchanged
 
 ## 📥 v0.2.0 Download
 
-Please download **all archive volumes** shown on the Release page.
+Please download all five archive parts.
 
-請下載 `v0.2.0` Release 中的所有 `.7z` 分卷，並放在同一個資料夾。
+請下載以下五個分卷，並放在同一個資料夾：
 
-Example:
+1. [⬇️ Part 1 — `.7z.001`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.001)
 
-```text
-zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.001
-zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.002
-zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.003
-zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.004
-zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.005
-```
+2. [⬇️ Part 2 — `.7z.002`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.002)
 
-> 實際分卷數量請以 GitHub Release 頁面為準。
+3. [⬇️ Part 3 — `.7z.003`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.003)
 
-所有分卷放在同一資料夾後，只需要使用 7-Zip 開啟：
+4. [⬇️ Part 4 — `.7z.004`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.004)
 
-```text
-...v0.2.0.7z.001
-```
+5. [⬇️ Part 5 — `.7z.005`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.005)
 
-後續 `.002`、`.003`、`.004`、`.005` 會由 7-Zip 自動讀取。
+### 🔐 SHA-256
 
-### 🔑 Archive Password / 解壓密碼
+[⬇️ Download `SHA256.txt`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/SHA256.txt)
+
+### 🔑 Extract Password / 解壓密碼
 
 ```text
 7725
 ```
 
-### 🔐 SHA-256
-
-請一併下載 Release 中的：
-
-```text
-SHA256.txt
-```
+後續 `.002`、`.003`、`.004`、`.005` 會由 7-Zip 自動讀取。
 
 PowerShell 驗證範例：
 
@@ -146,47 +134,33 @@ Get-FileHash ".\filename.7z.001" -Algorithm SHA256
 
 # 📦 v0.1.0 — EnterpriseS zh-TW
 
-> Previous Release / 舊版
+[➡️ View v0.1.0 Release](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
 
-[➡️ View / Download v0.1.0](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
+## 📥 v0.1.0 Download
 
-v0.1.0 是本專案第一個公開版本。
+Please download all five archive parts.
 
-Reference configuration：
+請下載以下五個分卷，並放在同一個資料夾：
 
-```text
-Edition           : EnterpriseS
-Architecture      : x64
-Version           : 10.0.19045
-ServicePack Build : 7725
-Language          : zh-TW
-Inbox Apps        : Included
-```
+1. [⬇️ Part 1 — `.7z.001`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001)
 
-v0.1.0 與 v0.2.0 在以下項目維持相同：
+2. [⬇️ Part 2 — `.7z.002`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.002)
 
-```text
-Windows version
-OS Build
-Architecture
-zh-TW environment
-Inbox Apps
-Reference-image customization
-```
+3. [⬇️ Part 3 — `.7z.003`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.003)
 
-主要差異是：
+4. [⬇️ Part 4 — `.7z.004`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.004)
+
+5. [⬇️ Part 5 — `.7z.005`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.005)
+
+### 🔐 SHA-256
+
+[⬇️ Download `SHA256.txt`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/SHA256.txt)
+
+### 🔑 Extract Password / 解壓密碼
 
 ```text
-v0.1.0 : EnterpriseS
-v0.2.0 : IoTEnterpriseS
+7725
 ```
-
-因此如果沒有特別需要保留舊版，建議使用：
-
-```text
-v0.2.0
-```
-
 ---
 
 # 📀 Build Origin / 建置來源
