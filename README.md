@@ -15,26 +15,136 @@ Custom Windows 10 IoT Enterprise LTSC 2021 reference-image and deployment projec
 
 # ⬇️ Download / 下載
 
-目前提供兩個 Release。
+目前提供三個 Release。
 
-**建議一般使用者使用 `v0.2.0`。**
+**建議一般使用者使用最新的 `v0.3.0`。**
 
 | Release | Edition ID | Version | Build | Language | Inbox Apps | Status |
 |---|---|---|---|---|---|---|
-| **v0.2.0** | **`IoTEnterpriseS`** | `22H2` | `19045.7725` | `zh-TW` | Included | **Current / Recommended** |
-| v0.1.0 | `EnterpriseS` | `22H2` | `19045.7725` | `zh-TW` | Included | Previous |
+| **v0.3.0** | **`IoTEnterpriseS`** | `22H2` | `19045.7725` | `zh-TW` | Included | **Current / Recommended** |
+| v0.2.0 | `IoTEnterpriseS` | `22H2` | `19045.7725` | `zh-TW` | Included | Previous |
+| v0.1.0 | `EnterpriseS` | `22H2` | `19045.7725` | `zh-TW` | Included | Legacy |
 
 ---
 
-# 🆕 v0.2.0 — IoTEnterpriseS zh-TW
+# 🆕 v0.3.0 — IoTEnterpriseS zh-TW
 
 > **Current / Recommended Release**
+
+[➡️ Download v0.3.0 / 下載 v0.3.0](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.3.0)
+
+## Version Information
+
+| **Item** | **Value** |
+|---|---|
+| Product | Windows 10 IoT Enterprise LTSC |
+| Edition ID | `IoTEnterpriseS` |
+| Version | `22H2` |
+| OS Build | `19045.7725` |
+| Architecture | `x64` |
+| Language | `zh-TW` |
+| Inbox Apps | Included |
+| Release | `v0.3.0` |
+| Archive Password | **`7725`** |
+
+## What changed from v0.2.0?
+
+`v0.3.0` is a minor maintenance revision of `v0.2.0`.
+
+主要修正 Windows Setup 的作業系統選擇畫面。
+
+在 `v0.2.0` 中，Windows Setup 的映像選擇畫面曾出現一個空白項目。
+
+`v0.3.0` 已修正此問題，現在 Windows Setup 僅正確顯示：
+
+```text
+Windows 10 IoT Enterprise LTSC    x64
+```
+
+`v0.3.0` 與 `v0.2.0` 的主要系統組態保持相同：
+
+```text
+Edition       : IoTEnterpriseS
+Version       : 22H2
+OS Build      : 19045.7725
+Architecture  : x64
+Language      : zh-TW
+Inbox Apps    : unchanged
+Custom setup  : unchanged
+```
+
+因此可將 `v0.3.0` 視為：
+
+```text
+v0.2.0
+        ↓
+Windows Setup image-selection display fix
+        ↓
+v0.3.0
+```
+
+除了 Windows Setup 顯示修正之外，系統版本、Build、Edition、語言、Inbox Apps 與其他主要客製內容均維持不變。
+
+---
+
+## 📥 v0.3.0 Download
+
+Please download all five archive parts.
+
+請下載以下五個分卷，並放在同一個資料夾：
+
+1. [⬇️ Part 1 — `.7z.001`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.3.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_customs_v0.3.0.7z.001)
+2. [⬇️ Part 2 — `.7z.002`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.3.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_customs_v0.3.0.7z.002)
+3. [⬇️ Part 3 — `.7z.003`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.3.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_customs_v0.3.0.7z.003)
+4. [⬇️ Part 4 — `.7z.004`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.3.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_customs_v0.3.0.7z.004)
+5. [⬇️ Part 5 — `.7z.005`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.3.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_customs_v0.3.0.7z.005)
+
+### 🔐 SHA-256
+
+[⬇️ Download `SHA256.txt`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.3.0/SHA256.txt)
+
+### 🔑 Extract Password / 解壓密碼
+
+```text
+7725
+```
+
+將所有分卷放在同一個資料夾後，只需要使用 7-Zip 開啟：
+
+```text
+zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_customs_v0.3.0.7z.001
+```
+
+後續：
+
+```text
+.002
+.003
+.004
+.005
+```
+
+會由 7-Zip 自動讀取，**不需要逐一解壓**。
+
+PowerShell SHA-256 驗證範例：
+
+```powershell
+Get-FileHash ".\filename.7z.001" -Algorithm SHA256
+```
+
+計算結果應與 `SHA256.txt` 完全一致。
+
+---
+
+# 📦 v0.2.0 — IoTEnterpriseS zh-TW
+
+> **Previous Release**
 
 [➡️ Download v0.2.0 / 下載 v0.2.0](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.2.0)
 
 ## Version Information
 
-| Item | Value |
+| **Item** | **Value** |
 |---|---|
 | Product | Windows 10 IoT Enterprise LTSC |
 | Edition ID | `IoTEnterpriseS` |
@@ -65,9 +175,7 @@ v0.2.0
 Edition : IoTEnterpriseS
 ```
 
-v0.2.0 uses Windows 10 IoT Enterprise LTSC English media as the
-IoT installation base and integrates the `zh-TW` Traditional Chinese
-language resources into that base.
+v0.2.0 uses Windows 10 IoT Enterprise LTSC English media as the IoT installation base and integrates the `zh-TW` Traditional Chinese language resources into that base.
 
 因此 v0.2.0 的最終映像為：
 
@@ -101,13 +209,9 @@ Please download all five archive parts.
 請下載以下五個分卷，並放在同一個資料夾：
 
 1. [⬇️ Part 1 — `.7z.001`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.001)
-
 2. [⬇️ Part 2 — `.7z.002`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.002)
-
 3. [⬇️ Part 3 — `.7z.003`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.003)
-
 4. [⬇️ Part 4 — `.7z.004`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.004)
-
 5. [⬇️ Part 5 — `.7z.005`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.2.0/zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.005)
 
 ### 🔐 SHA-256
@@ -120,9 +224,24 @@ Please download all five archive parts.
 7725
 ```
 
-後續 `.002`、`.003`、`.004`、`.005` 會由 7-Zip 自動讀取。
+將所有分卷放在同一個資料夾後，只需要使用 7-Zip 開啟：
 
-PowerShell 驗證範例：
+```text
+zh-tw_windows_10_IoT_enterprise_ltsc_2021_x64_19045.7725_custom_App_v0.2.0.7z.001
+```
+
+後續：
+
+```text
+.002
+.003
+.004
+.005
+```
+
+會由 7-Zip 自動讀取。
+
+PowerShell SHA-256 驗證範例：
 
 ```powershell
 Get-FileHash ".\filename.7z.001" -Algorithm SHA256
@@ -134,22 +253,63 @@ Get-FileHash ".\filename.7z.001" -Algorithm SHA256
 
 # 📦 v0.1.0 — EnterpriseS zh-TW
 
-[➡️ View v0.1.0 Release](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
+> **Legacy / Initial Release**
+
+[➡️ View / Download v0.1.0](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.1.0)
+
+## Version Information
+
+| **Item** | **Value** |
+|---|---|
+| Product | Windows 10 Enterprise LTSC |
+| Edition ID | `EnterpriseS` |
+| Version | `22H2` |
+| OS Build | `19045.7725` |
+| Architecture | `x64` |
+| Language | `zh-TW` |
+| Inbox Apps | Included |
+| Release | `v0.1.0` |
+| Archive Password | **`7725`** |
+
+v0.1.0 是本專案第一個公開版本。
+
+Reference configuration：
+
+```text
+Edition           : EnterpriseS
+Architecture      : x64
+Version           : 10.0.19045
+ServicePack Build : 7725
+Language          : zh-TW
+Inbox Apps        : Included
+```
+
+主要 Edition 差異：
+
+```text
+v0.1.0 : EnterpriseS
+v0.2.0 : IoTEnterpriseS
+v0.3.0 : IoTEnterpriseS
+```
+
+若沒有特別需要保留舊版，建議使用最新：
+
+```text
+v0.3.0
+```
+
+---
 
 ## 📥 v0.1.0 Download
 
 Please download all five archive parts.
 
-請下載以下五個分卷，並放在同一個資料夾：
+請下載以下五個分卷：
 
 1. [⬇️ Part 1 — `.7z.001`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.001)
-
 2. [⬇️ Part 2 — `.7z.002`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.002)
-
 3. [⬇️ Part 3 — `.7z.003`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.003)
-
 4. [⬇️ Part 4 — `.7z.004`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.004)
-
 5. [⬇️ Part 5 — `.7z.005`](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/download/v0.1.0/zh-tw_windows_10_enterprise_ltsc_2021_x64_19045.7725_custom_App.7z.005)
 
 ### 🔐 SHA-256
@@ -161,13 +321,14 @@ Please download all five archive parts.
 ```text
 7725
 ```
+
 ---
 
 # 📀 Build Origin / 建置來源
 
-## v0.2.0
+## v0.3.0 / v0.2.0
 
-v0.2.0 使用：
+`v0.2.0` 開始使用：
 
 ```text
 Windows 10 IoT Enterprise LTSC
@@ -226,6 +387,8 @@ Build ISO
 IoTEnterpriseS
 ```
 
+`v0.3.0` 延續 `v0.2.0` 的相同系統組態，主要修正 Windows Setup 映像選擇畫面的顯示問題。
+
 ---
 
 # ⚠️ LTSC / 22H2 Clarification
@@ -259,7 +422,7 @@ It should **not** be described as an official Microsoft
 
 # 🛍️ Microsoft Inbox Apps
 
-v0.1.0 與 v0.2.0 使用相同的 Inbox Apps Configuration。
+`v0.1.0`、`v0.2.0` 與 `v0.3.0` 使用相同的 Inbox Apps Configuration。
 
 Reference configuration：
 
@@ -269,7 +432,7 @@ Framework combinations     : 18
 Remaining Store Apps       : 0
 ```
 
-Main Apps：
+## Main Apps
 
 | Application | Version |
 |---|---:|
@@ -300,7 +463,7 @@ Not pre-provisioned
 
 ---
 
-# 🧩 Frameworks
+# 🧩 Frameworks / Dependencies
 
 Reference Framework configuration：
 
@@ -347,26 +510,34 @@ scripts/
 
 ## Provision-InboxApps.ps1
 
-Provision：
+用途：
 
 ```text
 18 Framework / Architecture combinations
-+
+        +
 14 Main Inbox Apps
+        ↓
+Post-provisioning validation
 ```
 
-Features：
+主要功能：
 
-```text
-Full preflight
-Source validation
-License validation
-Framework-first provisioning
-Existing-package detection
-No automatic package downgrade
-No automatic App removal
-Post-install verification
-Transcript logging
+- Full preflight
+- Source validation
+- License validation
+- Framework-first provisioning
+- Existing-package detection
+- No automatic package downgrade
+- No automatic App removal
+- Post-install verification
+- Transcript logging
+
+Example：
+
+```powershell
+powershell.exe -NoProfile -File .\scripts\Provision-InboxApps.ps1 `
+    -SourceRoot "G:\" `
+    -LogPath "D:\Logs\InboxApps_Provision.log"
 ```
 
 ---
@@ -379,6 +550,12 @@ Read-only verification：
 Main Apps              : 14
 Framework combinations : 18
 Remaining Store Apps   : 0
+```
+
+Run：
+
+```powershell
+powershell.exe -NoProfile -File .\scripts\Verify-InboxApps.ps1
 ```
 
 Exit codes：
@@ -402,16 +579,18 @@ Architecture
 Activation
 ```
 
-v0.2.0 expected Edition：
+Run：
 
-```text
-IoTEnterpriseS
+```powershell
+powershell.exe -NoProfile -File .\scripts\Verify-Windows-Edition.ps1
 ```
 
-v0.1.0：
+Expected Edition：
 
 ```text
-EnterpriseS
+v0.3.0 : IoTEnterpriseS
+v0.2.0 : IoTEnterpriseS
+v0.1.0 : EnterpriseS
 ```
 
 ---
@@ -429,13 +608,13 @@ Detailed documentation：
 
 # 🔍 Verification
 
-## Edition
+## Windows Edition
 
 ```cmd
 dism /online /Get-CurrentEdition
 ```
 
-v0.2.0：
+v0.3.0 / v0.2.0：
 
 ```text
 Current Edition : IoTEnterpriseS
@@ -470,10 +649,37 @@ OS Build 19045.7725
 slmgr /xpr
 ```
 
-Edition and Activation are separate properties.
+或：
+
+```cmd
+slmgr /dli
+```
+
+Edition 與 Activation 是不同概念：
 
 ```text
 Edition ≠ Activation
+```
+
+---
+
+## WIM Metadata
+
+```cmd
+dism /Get-ImageInfo /ImageFile:install.wim /Index:1
+```
+
+v0.3.0 / v0.2.0 Reference：
+
+```text
+Architecture        : x64
+Version             : 10.0.19045
+ServicePack Build   : 7725
+Edition             : IoTEnterpriseS
+Installation        : Client
+Product Type        : WinNT
+System Root         : WINDOWS
+Language            : zh-TW
 ```
 
 ---
@@ -501,7 +707,9 @@ Edition ≠ Activation
 
 # 📌 Release History
 
-## v0.2.0
+## v0.3.0 — Setup Display Fix
+
+Current / Recommended release.
 
 ```text
 Edition           : IoTEnterpriseS
@@ -509,19 +717,48 @@ Version           : 22H2
 OS Build          : 19045.7725
 Architecture      : x64
 Language          : zh-TW
-Inbox Apps        : Same as v0.1.0
+Inbox Apps        : Included
 ```
 
-Changes:
+Changes from v0.2.0：
+
+- Fixed the empty entry in the Windows Setup operating-system selection screen
+- Windows Setup now correctly displays `Windows 10 IoT Enterprise LTSC`
+- Retained `IoTEnterpriseS`
+- Retained Version `22H2`
+- Retained Build `19045.7725`
+- Retained `x64`
+- Retained `zh-TW`
+- Retained the same Inbox Apps configuration
+- Retained the same reference-image customization
+
+---
+
+## v0.2.0 — IoTEnterpriseS zh-TW
+
+Edition-corrected maintenance release.
+
+```text
+Edition           : IoTEnterpriseS
+Version           : 22H2
+OS Build          : 19045.7725
+Architecture      : x64
+Language          : zh-TW
+Inbox Apps        : Included
+```
+
+Changes from v0.1.0：
 
 - Changed the reference Edition from `EnterpriseS` to `IoTEnterpriseS`
-- Rebuilt using an English Windows 10 IoT Enterprise LTSC base
-- Integrated `zh-TW` language resources
+- Rebuilt using a Windows 10 IoT Enterprise LTSC base
+- Integrated `zh-TW` Traditional Chinese language resources
 - Retained the same OS Build
 - Retained the same Inbox Apps configuration
 - Retained the same project customization
 
-## v0.1.0
+---
+
+## v0.1.0 — EnterpriseS zh-TW
 
 Initial public release.
 
@@ -531,11 +768,12 @@ Version           : 22H2
 OS Build          : 19045.7725
 Architecture      : x64
 Language          : zh-TW
+Inbox Apps        : Included
 ```
 
 ---
 
-# ⚖️ Licensing
+# ⚖️ Licensing / Distribution Notice
 
 Windows, Windows IoT Enterprise, Microsoft Store and related Microsoft
 software remain subject to Microsoft's applicable license terms.
@@ -576,12 +814,31 @@ No activation bypass or crack is provided.
 
 ---
 
+# 🔒 Security / Integrity
+
+Before using a downloaded release：
+
+1. Download all five archive volumes.
+2. Place all archive volumes in the same directory.
+3. Download the corresponding `SHA256.txt`.
+4. Verify each downloaded archive using SHA-256.
+5. Open `.7z.001` using 7-Zip.
+6. Enter archive password `7725`.
+7. Test the resulting ISO in an isolated VM before production use.
+
+---
+
 # 📌 Project Status
 
 ```text
-Current Release  : v0.2.0
+Current Release  : v0.3.0
 Current Edition  : IoTEnterpriseS
-Previous Release : v0.1.0 / EnterpriseS
+
+Previous Release : v0.2.0
+Previous Edition : IoTEnterpriseS
+
+Legacy Release   : v0.1.0
+Legacy Edition   : EnterpriseS
 
 Version          : 22H2
 OS Build         : 19045.7725
@@ -590,6 +847,6 @@ Language         : zh-TW
 Inbox Apps       : Included
 ```
 
-**Recommended release: `v0.2.0`**
+**Recommended release: `v0.3.0`**
 
-[➡️ Open v0.2.0 Release](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.2.0)
+[➡️ Open v0.3.0 Release](https://github.com/hom-line/Windows-10-IoT-Enterprise-LTSC-2021-22H2-zh-TW-Custom/releases/tag/v0.3.0)
