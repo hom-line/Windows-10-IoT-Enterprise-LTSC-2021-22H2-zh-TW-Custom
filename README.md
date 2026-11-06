@@ -755,6 +755,7 @@ Detailed documentation：
 - [Edition and Licensing](docs/EDITION.md)
 - [Microsoft Inbox Apps](docs/INBOX-APPS.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [Release Audit / 三個版本的附件與發佈日期核對](docs/RELEASE_AUDIT_zh-TW.md)
 
 ### 🔗 Related Project / 相關專案
 
