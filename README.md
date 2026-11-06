@@ -1,5 +1,7 @@
 # Windows 10 IoT Enterprise LTSC 2021 — Custom 22H2 zh-TW
 
+> ⭐ **製作與維護不易，感謝每一份支持！** 如果這個專案對你有幫助，歡迎點擊右上角的 **Star** ⭐。你的支持是作者持續改進、維護專案及推出下一次更新的動力！
+
 Custom Windows 10 IoT Enterprise LTSC 2021 reference-image and deployment project.
 
 本專案提供 Windows 10 IoT Enterprise LTSC 2021 的自訂 Reference Image、zh-TW 語言整合、Inbox Apps Provisioning、Sysprep / WIM Capture、部署工具與相關技術文件。
