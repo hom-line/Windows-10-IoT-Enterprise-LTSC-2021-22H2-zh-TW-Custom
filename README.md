@@ -756,6 +756,10 @@ Detailed documentation：
 - [Microsoft Inbox Apps](docs/INBOX-APPS.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 
+### 🔗 Related Project / 相關專案
+
+- [Windows 11 IoT Enterprise LTSC 2024 — Custom 24H2 / 25H2 / 26H2 (zh-TW)](https://github.com/hom-line/Windows-11-IoT-Enterprise-LTSC-2024-zh-TW-Custom) — Windows 11 參考映像、Microsoft Inbox Apps、FOD、Sysprep、WIM／ISO 部署技術紀錄；25H2／26H2 屬非官方實驗配置。
+
 ---
 
 # 📁 Repository Structure
